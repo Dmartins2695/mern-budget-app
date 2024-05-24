@@ -7,6 +7,7 @@ const path = require('path')
 
 //Route Imports
 const testRoutes = require('./routes/exampleRoute')
+const budgetRoutes = require('./routes/budgetRoutes')
 
 dotenv.config()
 
@@ -39,6 +40,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // Routes
 app.use('/api/test', testRoutes)
+app.use('/api/budget', budgetRoutes)
 
 app.get('/', (req, res) => {
 	res.send('Hello, World!')

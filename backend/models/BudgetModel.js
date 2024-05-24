@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-const IncomeModel = require('./IncomeModel')
-const CategoryModel = require('./CategoryModel')
-const ExpenseModel = require('./ExpenseModel')
-const TransactionModel = require('./TransactionModel')
+const Income = require('./IncomeModel')
+const Category = require('./CategoryModel')
+const Expense = require('./ExpenseModel')
+const Transaction = require('./TransactionModel')
 
 const Schema = mongoose.Schema
 
@@ -28,18 +28,30 @@ const BudgetSchema = new Schema(
 			type: Number,
 			default: 0,
 		},
-		incomes: {
-			type: IncomeModel,
-		},
-		categories: {
-			type: CategoryModel,
-		},
-		expenses: {
-			type: ExpenseModel,
-		},
-		transactions: {
-			type: TransactionModel,
-		},
+		incomes: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'Income',
+			},
+		],
+		categories: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'Category',
+			},
+		],
+		expenses: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'Expense',
+			},
+		],
+		transactions: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'Transaction',
+			},
+		],
 	},
 	{ timestamps: true },
 )
