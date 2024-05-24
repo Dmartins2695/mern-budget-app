@@ -5,6 +5,8 @@ const cors = require('cors')
 const dotenv = require('dotenv')
 const path = require('path')
 
+//Route Imports
+const testRoutes = require('./routes/exampleRoute')
 
 dotenv.config()
 
@@ -36,6 +38,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Routes
+app.use('/api/test', testRoutes)
 
 app.get('/', (req, res) => {
 	res.send('Hello, World!')
