@@ -27,31 +27,7 @@ const BudgetSchema = new Schema(
 		totalProjected: {
 			type: Number,
 			default: 0,
-		},
-		incomes: [
-			{
-				type: Schema.Types.ObjectId,
-				ref: 'Income',
-			},
-		],
-		categories: [
-			{
-				type: Schema.Types.ObjectId,
-				ref: 'Category',
-			},
-		],
-		expenses: [
-			{
-				type: Schema.Types.ObjectId,
-				ref: 'Expense',
-			},
-		],
-		transactions: [
-			{
-				type: Schema.Types.ObjectId,
-				ref: 'Transaction',
-			},
-		],
+		}
 	},
 	{ timestamps: true },
 )
