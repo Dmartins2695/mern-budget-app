@@ -5,6 +5,11 @@ const cors = require('cors')
 const dotenv = require('dotenv')
 const path = require('path')
 
+//Route Imports
+const budgetRoutes = require('./routes/budgetRoutes')
+const categoryRoutes = require('./routes/categoryRoutes')
+const expenseRoutes = require('./routes/expenseRoutes')
+const incomeRoutes = require('./routes/incomeRoutes')
 
 dotenv.config()
 
@@ -16,10 +21,7 @@ app.use(express.json())
 
 // Connect to MongoDB
 mongoose
-	.connect(process.env.MONGO_URI, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	})
+	.connect(process.env.MONGO_URI, {})
 	.then(() => {
 		console.log('Connected to MongoDB')
 	})
@@ -36,6 +38,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Routes
+app.use('/api/budget', budgetRoutes)
+app.use('/api/category', categoryRoutes)
+app.use('/api/expense', expenseRoutes)
+app.use('/api/income', incomeRoutes)
 
 app.get('/', (req, res) => {
 	res.send('Hello, World!')
