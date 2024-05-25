@@ -11,7 +11,6 @@ const getAllowedFields = (schema) => {
 
 const filterRequestBodyFields = (allowedFields, body) => {
 	const updateFields = {}
-	console.log(body)
 	allowedFields.forEach((field) => {
 		if (body[field] !== undefined) {
 			updateFields[field] = body[field]
