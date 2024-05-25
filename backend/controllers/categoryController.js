@@ -29,7 +29,7 @@ const getCategoryById = async (req, res) => {
 //Create Category
 
 const createNewCategory = async (req, res) => {
-	const allowedFields = getAllowedFields(Budget.schema)
+	const allowedFields = getAllowedFields(Category.schema)
 	const updateFields = filterRequestBodyFields(allowedFields, req.body)
 	try {
 		const category = await Category.create({ $set: updateFields })
@@ -60,7 +60,7 @@ const deleteCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
 	const { id } = req.params
 
-	const allowedFields = getAllowedFields(Budget.schema)
+	const allowedFields = getAllowedFields(Category.schema)
 	const updateFields = filterRequestBodyFields(allowedFields, req.body)
 
 	if (!mongoose.Types.ObjectId.isValid(id)) {
