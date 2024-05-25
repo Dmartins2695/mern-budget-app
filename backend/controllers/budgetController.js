@@ -29,12 +29,11 @@ const getBudgetById = async (req, res) => {
 //Create Budget
 
 const createNewBudget = async (req, res) => {
-
 	const allowedFields = getAllowedFields(Budget.schema)
-	const updateFields = filterRequestBodyFields(allowedFields, req.body)
-	
+	const createFields = filterRequestBodyFields(allowedFields, req.body)
+
 	try {
-		const budget = await Budget.create({ $set: updateFields })
+		const budget = await Budget.create({ ...createFields })
 		res.status(200).json(budget)
 	} catch (e) {
 		res.status(400).json({ error: e.message })
