@@ -30,9 +30,10 @@ const getCategoryById = async (req, res) => {
 
 const createNewCategory = async (req, res) => {
 	const allowedFields = getAllowedFields(Category.schema)
-	const updateFields = filterRequestBodyFields(allowedFields, req.body)
+	const createFields = filterRequestBodyFields(allowedFields, req.body)
+
 	try {
-		const category = await Category.create({ $set: updateFields })
+		const category = await Category.create({ ...createFields })
 		res.status(200).json(category)
 	} catch (e) {
 		res.status(400).json({ error: e.message })
@@ -66,7 +67,7 @@ const updateCategory = async (req, res) => {
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).json({ error: 'Invalid Id' })
 	}
-	
+
 	try {
 		const budget = await Category.findOneAndUpdate(
 			{ _id: id },
