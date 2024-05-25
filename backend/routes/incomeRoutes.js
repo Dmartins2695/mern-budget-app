@@ -1,15 +1,27 @@
 const express = require('express')
+const {
+	createNewIncome,
+	getAllIncomes,
+	getIncomeById,
+	deleteIncome,
+	updateIncome,
+} = require('../controllers/incomeController')
 
 const router = express.Router()
-//Get all Incomes in Budget
-router.get('', (req, res) => {})
-//Get Income By Id
-router.get('/:id', (req, res) => {})
-//Create Income
-router.post('/', (req, res) => {})
-//Delete Income
-router.delete('/', (req, res) => {})
-//Update Income
-router.patch('/', (req, res) => {})
+
+//Get all Budgets
+router.get('/', getAllIncomes)
+
+//Get Budget By Id
+router.get('/:id', getIncomeById)
+
+//Create Budget
+router.post('/', createNewIncome)
+
+//Delete Budget
+router.delete('/:id', deleteIncome)
+
+//Update Budget
+router.patch('/:id', updateIncome)
 
 module.exports = router

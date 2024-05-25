@@ -9,6 +9,7 @@ const path = require('path')
 const budgetRoutes = require('./routes/budgetRoutes')
 const categoryRoutes = require('./routes/categoryRoutes')
 const expenseRoutes = require('./routes/expenseRoutes')
+const incomeRoutes = require('./routes/incomeRoutes')
 
 dotenv.config()
 
@@ -40,6 +41,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use('/api/budget', budgetRoutes)
 app.use('/api/category', categoryRoutes)
 app.use('/api/expense', expenseRoutes)
+app.use('/api/income', incomeRoutes)
 
 app.get('/', (req, res) => {
 	res.send('Hello, World!')
