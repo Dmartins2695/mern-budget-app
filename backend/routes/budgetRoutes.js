@@ -1,29 +1,27 @@
 const express = require('express')
-const Budget = require('../models/BudgetModel')
+const {
+	createNewBudget,
+	getAllBudgets,
+	getBudgetById,
+	deleteBudget,
+	updateBudget,
+} = require('../controllers/budgetController')
 
 const router = express.Router()
 
 //Get all Budgets
-router.get('', (req, res) => {})
+router.get('/', getAllBudgets)
 
 //Get Budget By Id
-router.get('/:id', (req, res) => {})
+router.get('/:id', getBudgetById)
 
 //Create Budget
-router.post('/', async (req, res) => {
-	const { title } = req.body
-	try {
-		const budget = await Budget.create({ title })
-		res.status(200).json(budget)
-	} catch (e) {
-		res.status(400).json({ error: e.message })
-	}
-})
+router.post('/', createNewBudget)
 
 //Delete Budget
-router.delete('/', (req, res) => {})
+router.delete('/:id', deleteBudget)
 
 //Update Budget
-router.patch('/', (req, res) => {})
+router.patch('/:id', updateBudget)
 
 module.exports = router
