@@ -18,10 +18,17 @@ const app = express()
 // Middleware
 app.use(cors())
 app.use(express.json())
+app.use((req,res,next)=>{
+	console.log('request method->', req.method)
+	console.log('request path->', req.path)
+	next()
+})
 
+const mongoURI = process.env.MONGO_URL || process.env.MONGO_URI
+console.log(mongoURI)
 // Connect to MongoDB
 mongoose
-	.connect(process.env.MONGO_URI, {})
+	.connect(mongoURI, {})
 	.then(() => {
 		console.log('Connected to MongoDB')
 	})

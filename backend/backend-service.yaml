@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mern-budget-backend
+  namespace: mern-budget
+spec:
+  selector:
+    app: mern-budget-backend
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 4000
+      name: apis
