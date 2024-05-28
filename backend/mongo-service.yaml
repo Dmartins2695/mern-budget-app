@@ -1,12 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mern-budget-mongo
-  namespace: mern-budget
+ name: mern-budget-mongo
+ namespace: mern-budget
 spec:
-  selector:
-    app: mern-budget-mongo
-  ports:
-    - protocol: TCP
-      port: 27017
-      targetPort: 27017
+ selector:
+  app: mern-budget-mongo
+ type: NodePort
+ ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017
+    nodePort: 30326
+    name: db

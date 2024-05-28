@@ -25,7 +25,7 @@ Setup kubernetes
             kubectl set image deployment/mern-budget-frontend backend=mbewd/mern-budget-frontend:latest -n mern-budget
 
         Now you cluster should have your pods running
-        URI for the database will be mongodb://localhost:27017/
+        URI for the database will be mongodb://localhost:30326/ to use in a graphic interface for example, otherwise is as it is in backend deployment.yaml
         you can access the apis on the backend with http://localhost:4000
 
         

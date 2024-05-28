@@ -24,9 +24,11 @@ app.use((req,res,next)=>{
 	next()
 })
 
+const mongoURI = process.env.MONGO_URL || process.env.MONGO_URI
+console.log(mongoURI)
 // Connect to MongoDB
 mongoose
-	.connect(process.env.MONGO_URL || process.env.MONGO_URI, {})
+	.connect(mongoURI, {})
 	.then(() => {
 		console.log('Connected to MongoDB')
 	})
