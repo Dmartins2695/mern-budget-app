@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: mern-budget-frontend
+ namespace: mern-budget
+spec:
+ replicas: 1
+ selector:
+  matchLabels:
+   app: mern-budget-frontend
+ template:
+  metadata:
+   labels:
+    app: mern-budget-frontend
+  spec:
+   containers:
+    - name: frontend
+      image: mbewd/mern-budget-frontend:1.00 # Updated image name with tag
+      ports:
+       - containerPort: 3000

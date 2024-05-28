@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mern-budget-backend
+  namespace: mern-budget
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mern-budget-backend
+  template:
+    metadata:
+      labels:
+        app: mern-budget-backend
+    spec:
+      containers:
+      - name: backend
+        image: mbewd/mern-budget-backend:latest  # Updated image name with tag
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MONGO_URL
+          value: "mongodb://mern-budget-mongo:27017/mern-budget"
