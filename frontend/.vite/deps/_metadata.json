@@ -1,0 +1,40 @@
+{
+  "hash": "3e2ac011",
+  "configHash": "30568be5",
+  "lockfileHash": "abcd9c24",
+  "browserHash": "add63777",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "fba9b369",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "5e28b203",
+      "needsInterop": true
+    },
+    "axios": {
+      "src": "../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "2374b921",
+      "needsInterop": false
+    },
+    "keycloak-js": {
+      "src": "../../node_modules/keycloak-js/dist/keycloak.mjs",
+      "file": "keycloak-js.js",
+      "fileHash": "17434bd9",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-PMYDY72F": {
+      "file": "chunk-PMYDY72F.js"
+    },
+    "chunk-ZS7NZCD4": {
+      "file": "chunk-ZS7NZCD4.js"
+    }
+  }
+}

@@ -6,11 +6,8 @@ const dotenv = require('dotenv')
 const path = require('path')
 const session = require('express-session')
 const { keycloak, setupKeycloak } = require('./middleware/keycloak')
-//Route Imports
-const budgetRoutes = require('./routes/budgetRoutes')
-const categoryRoutes = require('./routes/categoryRoutes')
-const expenseRoutes = require('./routes/expenseRoutes')
-const incomeRoutes = require('./routes/incomeRoutes')
+const { setupRoutes } = require('./routes/routesIndex')
+
 dotenv.config()
 
 // Kube cluster code
@@ -27,33 +24,28 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 setupKeycloak(app)
-
-// Routes
-app.use('/api/budget', keycloak.protect(), budgetRoutes)
-app.use('/api/category', keycloak.protect(), categoryRoutes)
-app.use('/api/expense', expenseRoutes)
-app.use('/api/income', incomeRoutes)
+setupRoutes(app, keycloak)
 
 app.get('/', (req, res) => {
 	res.send('Hello, World!')
 })
 
-/* // Serve static files from the React app
+// Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')))
 
 // Catch-all handler for any request that doesn't match API routes
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, 'client/build', 'index.html'))
-}) */
+})
 
 // Connect to MongoDB
 mongoose
 	.connect(mongoURI, {})
 	.then(() => {
-		console.log('Connected to MongoDB')
+		console.log(`Connected to MongoDB ${mongoURI}`)
 	})
 	.catch((err) => {
-		console.error('Error connecting to MongoDB', err)
+		console.error(`Error connecting to MongoDB uri:${mongoURI}`, err)
 	})
 
 // Start the server
