@@ -4,9 +4,9 @@ const mongoose = require('mongoose')
 
 //Get All Budgets
 const getAllBudgets = async (req, res) => {
-	const userId = req.kauth.grant.access_token.content.sub
-	console.log(userId)
-	const budgets = await Budget.find({}).sort({ createdAt: -1 })
+	const budgets = await Budget.find({ userId: req.user.id }).sort({
+		createdAt: -1,
+	})
 
 	res.status(200).json(budgets)
 }
@@ -35,7 +35,7 @@ const createNewBudget = async (req, res) => {
 	const createFields = filterRequestBodyFields(allowedFields, req.body)
 
 	try {
-		const budget = await Budget.create({ ...createFields })
+		const budget = await Budget.create({ ...createFields,  userId: req.user.id })
 		res.status(200).json(budget)
 	} catch (e) {
 		res.status(400).json({ error: e.message })

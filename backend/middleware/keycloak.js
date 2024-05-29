@@ -7,6 +7,7 @@ const keycloakConfig = {
 	bearerOnly: true,
 	serverUrl: 'http://localhost:8080',
 	realm: 'mern-budget',
+	//realmPublicKey: process.env.KEYCLOAK_SECRET_LOCAL,
 	realmPublicKey: process.env.KEYCLOAK_SECRET,
 }
 
@@ -21,6 +22,11 @@ const setupKeycloak = (app) => {
 			resave: false,
 			saveUninitialized: true,
 			store: memoryStore,
+			cookie: {
+				secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+				//maxAge: 24 * 60 * 60 * 1000, // 24 hours
+				maxAge: 1 * 60 * 1000, // 5 minutes
+			},
 		}),
 	)
 

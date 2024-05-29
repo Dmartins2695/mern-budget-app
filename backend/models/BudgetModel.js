@@ -1,8 +1,4 @@
 const mongoose = require('mongoose')
-const Income = require('./IncomeModel')
-const Category = require('./CategoryModel')
-const Expense = require('./ExpenseModel')
-const Transaction = require('./TransactionModel')
 
 const Schema = mongoose.Schema
 
@@ -27,7 +23,11 @@ const BudgetSchema = new Schema(
 		totalProjected: {
 			type: Number,
 			default: 0,
-		}
+		},
+		userId: {
+			type: String,
+			required: true,
+		},
 	},
 	{ timestamps: true },
 )
