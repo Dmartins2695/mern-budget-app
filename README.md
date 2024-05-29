@@ -28,8 +28,6 @@ kubectl set image deployment/mern-budget-backend backend=mbewd/mern-budget-backe
         URI for the database will be mongodb://localhost:30326/ to use in a graphic interface for example, otherwise is as it is in backend deployment.yaml
         you can access the apis on the backend with http://localhost:4000
 
-
-
 Keycloak deployment
 
            helm install mern-budget oci://registry-1.docker.io/bitnamicharts/keycloak
