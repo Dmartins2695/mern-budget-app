@@ -7,25 +7,25 @@
     "react": {
       "src": "../../node_modules/react/index.js",
       "file": "react.js",
-      "fileHash": "fba9b369",
+      "fileHash": "8a0d85cf",
       "needsInterop": true
     },
     "react-dom/client": {
       "src": "../../node_modules/react-dom/client.js",
       "file": "react-dom_client.js",
-      "fileHash": "5e28b203",
+      "fileHash": "73e62afb",
       "needsInterop": true
     },
     "axios": {
       "src": "../../node_modules/axios/index.js",
       "file": "axios.js",
-      "fileHash": "2374b921",
+      "fileHash": "eb59e9d2",
       "needsInterop": false
     },
     "keycloak-js": {
       "src": "../../node_modules/keycloak-js/dist/keycloak.mjs",
       "file": "keycloak-js.js",
-      "fileHash": "17434bd9",
+      "fileHash": "fc30fa92",
       "needsInterop": false
     }
   },

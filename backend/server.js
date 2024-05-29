@@ -4,8 +4,8 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const dotenv = require('dotenv')
 const path = require('path')
-const session = require('express-session')
 const { keycloak, setupKeycloak } = require('./middleware/keycloak')
+const addUserToRequest = require('./middleware/addUserToRequest')
 const { setupRoutes } = require('./routes/routesIndex')
 
 dotenv.config()
@@ -24,6 +24,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 setupKeycloak(app)
+app.use(addUserToRequest)
 setupRoutes(app, keycloak)
 
 app.get('/', (req, res) => {
