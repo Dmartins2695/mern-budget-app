@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const dotenv = require('dotenv')
 const path = require('path')
+const session = require('express-session')
+const { keycloak, memoryStore } = require('./middleware/keycloak')
 
 //Route Imports
 const budgetRoutes = require('./routes/budgetRoutes')
@@ -18,14 +20,24 @@ const app = express()
 // Middleware
 app.use(cors())
 app.use(express.json())
-app.use((req,res,next)=>{
-	console.log('request method->', req.method)
-	console.log('request path->', req.path)
-	next()
-})
+app.use(
+	session({
+		secret: 'some secret key', // Use a strong secret key
+		resave: false,
+		saveUninitialized: true,
+		store: memoryStore,
+	}),
+)
+// Keycloak middleware
+app.use(keycloak.middleware())
 
-const mongoURI = process.env.MONGO_URL || process.env.MONGO_URI
-console.log(mongoURI)
+// Protect all routes by default
+app.use(keycloak.protect())
+
+let mongoURI = process.env.MONGO_URL || process.env.MONGO_URI
+if (process.env.MONGO_KUBE_URI) {
+	mongoURI = process.env.MONGO_KUBE_URI
+}
 // Connect to MongoDB
 mongoose
 	.connect(mongoURI, {})
@@ -54,16 +66,17 @@ app.get('/', (req, res) => {
 	res.send('Hello, World!')
 })
 
-// Serve static files from the React app
+/* // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')))
 
 // Catch-all handler for any request that doesn't match API routes
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, 'client/build', 'index.html'))
-})
+}) */
 
 // Start the server
-const PORT = process.env.PORT || 4000
+//let PORT = process.env.PORT || 4000
+let PORT = 5000
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`)
 })
