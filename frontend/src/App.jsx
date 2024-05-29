@@ -2,13 +2,15 @@ import { useState } from 'react'
 import useAuth from './hooks/useAuth'
 import axios from 'axios'
 
+axios.defaults.baseURL = 'http://localhost:5000'
+
 const Private = (props) => {
 	const [data, setData] = useState(null)
 
 	const callBackend = () => {
 		const config = {
 			headers: {
-				authorization: `Bearer ${props.token + 'qewqeweq'}`,
+				authorization: `Bearer ${props.token}`,
 			},
 		}
 

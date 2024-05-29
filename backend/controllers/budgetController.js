@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 
 //Get All Budgets
 const getAllBudgets = async (req, res) => {
+	const userId = req.kauth.grant.access_token.content.sub
+	console.log(userId)
 	const budgets = await Budget.find({}).sort({ createdAt: -1 })
 
 	res.status(200).json(budgets)
