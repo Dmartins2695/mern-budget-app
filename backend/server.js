@@ -25,6 +25,11 @@ app.use(cors())
 app.use(express.json())
 setupKeycloak(app)
 app.use(addUserToRequest)
+app.use((req,res,next)=>{
+	console.log('request method->', req.method)
+	console.log('request path->', req.path)
+	next()
+})
 setupRoutes(app, keycloak)
 
 app.get('/', (req, res) => {

@@ -8,25 +8,29 @@ const BudgetSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		totalIncome: {
+		amount: {
 			type: Number,
-			default: 0,
-		},
-		totalSpent: {
-			type: Number,
-			default: 0,
-		},
-		totalSpent: {
-			type: Number,
-			default: 0,
-		},
-		totalProjected: {
-			type: Number,
-			default: 0,
+			required: true,
 		},
 		userId: {
 			type: String,
 			required: true,
+		},
+		recurringTime: {
+			type: String,
+			enum: ['one time', 'week', 'month', 'annual'],
+			required: true,
+		},
+		timeToRenew: {
+			type: Number,
+		},
+		incomeId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Income',
+		},
+		categoryId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Category',
 		},
 	},
 	{ timestamps: true },

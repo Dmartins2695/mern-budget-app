@@ -1,90 +1,35 @@
 const Budget = require('../models/BudgetModel')
-const { getAllowedFields, filterRequestBodyFields } = require('./utils')
-const mongoose = require('mongoose')
+const {
+	updateTemplate,
+	createTemplate,
+	getByIdTemplate,
+	getAllTemplate,
+} = require('./utils')
 
 //Get All Budgets
 const getAllBudgets = async (req, res) => {
-	const budgets = await Budget.find({ userId: req.user.id }).sort({
-		createdAt: -1,
-	})
-
-	res.status(200).json(budgets)
+	getAllTemplate(req, res, Budget)
 }
 
 //Get budget by id
 const getBudgetById = async (req, res) => {
-	const { id } = req.params
-
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(404).json({ error: 'Invalid Id' })
-	}
-
-	const budget = await Budget.findById(id)
-
-	if (!budget) {
-		return res.status(404).json({ error: 'Budget not Found!' })
-	}
-
-	res.status(200).json(budget)
+	getByIdTemplate(req, res, Budget, 'Budget')
 }
 
 //Create Budget
 
 const createNewBudget = async (req, res) => {
-	const allowedFields = getAllowedFields(Budget.schema)
-	const createFields = filterRequestBodyFields(allowedFields, req.body)
-
-	try {
-		const budget = await Budget.create({ ...createFields,  userId: req.user.id })
-		res.status(200).json(budget)
-	} catch (e) {
-		res.status(400).json({ error: e.message })
-	}
+	createTemplate(req, res, Budget)
 }
 
 //Delete Budget
 const deleteBudget = async (req, res) => {
-	const { id } = req.params
-
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(404).json({ error: 'Invalid Id' })
-	}
-
-	const budget = await Budget.findOneAndDelete({ _id: id })
-
-	if (!budget) {
-		return res.status(404).json({ error: 'Budget not Found!' })
-	}
-
-	res.status(200).json({ message: 'Deleted with success' })
+	deleteTemplate(req, res, Budget, 'Budget')
 }
 
 //Update Budget
 const updateBudget = async (req, res) => {
-	const { id } = req.params
-
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(404).json({ error: 'Invalid Id' })
-	}
-
-	const allowedFields = getAllowedFields(Budget.schema)
-	const updateFields = filterRequestBodyFields(allowedFields, req.body)
-
-	try {
-		const budget = await Budget.findOneAndUpdate(
-			{ _id: id },
-			{ $set: updateFields },
-			{ new: true, runValidators: true },
-		)
-
-		if (!budget) {
-			return res.status(404).json({ error: 'Budget not Found!' })
-		}
-
-		res.status(200).json(budget)
-	} catch (e) {
-		res.status(400).json({ error: e.message })
-	}
+	updateTemplate(req, res, Budget, 'Budget')
 }
 
 module.exports = {

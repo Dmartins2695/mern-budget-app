@@ -1,10 +1,16 @@
 const Income = require('../models/IncomeModel')
-const { getAllowedFields, filterRequestBodyFields } = require('./utils')
+const {
+	getAllowedFields,
+	filterRequestBodyFields,
+	updateTemplate,
+} = require('./utils')
 const mongoose = require('mongoose')
 
 //Get All Incomes
 const getAllIncomes = async (req, res) => {
-	const incomes = await Income.find({}).sort({ createdAt: -1 })
+	const incomes = await Income.find({ userId: req.user.id }).sort({
+		createdAt: -1,
+	})
 
 	res.status(200).json(incomes)
 }
@@ -17,10 +23,10 @@ const getIncomeById = async (req, res) => {
 		return res.status(404).json({ error: 'Invalid Id' })
 	}
 
-	const income = await Income.findById(id)
+	const income = await Income.findOne({ _id: id, userId: req.user.id })
 
 	if (!income) {
-		return res.status(404).json({ error: 'Budget not Found!' })
+		return res.status(404).json({ error: 'Income not Found!' })
 	}
 
 	res.status(200).json(income)
@@ -33,7 +39,7 @@ const createNewIncome = async (req, res) => {
 	const createFields = filterRequestBodyFields(allowedFields, req.body)
 
 	try {
-		const income = await Income.create({ ...createFields })
+		const income = await Income.create({ ...createFields, userId: req.user.id })
 		res.status(200).json(income)
 	} catch (e) {
 		res.status(400).json({ error: e.message })
@@ -48,7 +54,7 @@ const deleteIncome = async (req, res) => {
 		return res.status(404).json({ error: 'Invalid Id' })
 	}
 
-	const income = await Income.findOneAndDelete({ _id: id })
+	const income = await Income.findOneAndDelete({ _id: id, userId: req.user.id })
 
 	if (!income) {
 		return res.status(404).json({ error: 'Income not Found!' })
@@ -58,31 +64,8 @@ const deleteIncome = async (req, res) => {
 }
 
 //Update income
-const updateIncome = async (req, res) => {
-	const { id } = req.params
-
-	if (!mongoose.Types.ObjectId.isValid(id)) {
-		return res.status(404).json({ error: 'Invalid Id' })
-	}
-
-	const allowedFields = getAllowedFields(Income.schema)
-	const updateFields = filterRequestBodyFields(allowedFields, req.body)
-
-	try {
-		const income = await Income.findOneAndUpdate(
-			{ _id: id },
-			{ $set: updateFields },
-			{ new: true, runValidators: true },
-		)
-
-		if (!income) {
-			return res.status(404).json({ error: 'Income not Found!' })
-		}
-
-		res.status(200).json(income)
-	} catch (e) {
-		res.status(400).json({ error: e.message })
-	}
+const updateIncome = (req, res) => {
+	updateTemplate(req, res, Income, 'Income')
 }
 
 module.exports = {

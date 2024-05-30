@@ -8,18 +8,13 @@ const CategorySchema = new Schema(
 			type: String,
 			required: true,
 		},
-        amount:{
-            type: Number,
-            required: true,
-            default:  0
-        },
-        amountUsed:{
-            type: Number,
-            default:  0
-        },
-		budgetId: {
-			type: Schema.Types.ObjectId,
-			ref: 'Budget',
+		parentCategoryId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'ParentCategory'
+		},
+		userId: {
+			type: Number,
+			required: true,
 		},
 	},
 	{ timestamps: true },
