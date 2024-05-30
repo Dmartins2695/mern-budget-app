@@ -4,6 +4,7 @@ const {
 	createTemplate,
 	getByIdTemplate,
 	getAllTemplate,
+	deleteTemplate
 } = require('./utils')
 
 //Get All Budgets

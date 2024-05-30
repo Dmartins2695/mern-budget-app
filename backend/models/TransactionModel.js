@@ -11,10 +11,12 @@ const TransactionSchema = new Schema(
 		incomeId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Income',
+			required: true,
 		},
 		categoryId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Category',
+			required: true,
 		},
 		amount: {
 			type: Number,
