@@ -1,7 +1,10 @@
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import DashboardIcon from '@mui/icons-material/Dashboard'
 import MenuIcon from '@mui/icons-material/Menu'
-import { styled, useTheme } from '@mui/material'
+import { Grid, styled, useTheme } from '@mui/material'
 import MuiAppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -15,9 +18,6 @@ import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 
 import { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
@@ -112,17 +112,24 @@ const Layout = (props) => {
 		<Box sx={{ display: 'flex' }}>
 			<AppBar position='fixed' open={open}>
 				<Toolbar>
-					<IconButton
-						color='inherit'
-						aria-label='open drawer'
-						onClick={handleDrawerOpen}
-						edge='start'
-						sx={{ mr: 2, ...(open && { display: 'none' }) }}>
-						<MenuIcon />
-					</IconButton>
-					<Typography variant='h6' noWrap component='div'>
-						{labelIn('header_title')}
-					</Typography>
+					<Grid container justifyContent={'space-between'} alignItems={'center'}>
+						<Grid item>
+							<IconButton
+								color='inherit'
+								aria-label='open drawer'
+								onClick={handleDrawerOpen}
+								edge='start'
+								sx={{ mr: 2, ...(open && { display: 'none' }) }}>
+								<MenuIcon />
+							</IconButton>
+						</Grid>
+						<Grid item xs={11}>
+							<Typography variant='h6' noWrap component='div'>
+								{labelIn('header_title')}
+							</Typography>
+						</Grid>
+						<Grid item>{/* login button, notifications*/}</Grid>
+					</Grid>
 				</Toolbar>
 			</AppBar>
 			<Drawer
