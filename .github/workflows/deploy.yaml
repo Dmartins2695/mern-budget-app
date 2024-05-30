@@ -13,7 +13,10 @@ jobs:
    # Other build steps...
 
    - name: Decode and configure Kubeconfig
-     run: echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
+
 
    - name: Configure kubectl with service account
      run: |
