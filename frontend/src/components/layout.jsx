@@ -15,6 +15,9 @@ import ListItemText from '@mui/material/ListItemText'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 
 import { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
@@ -26,10 +29,17 @@ const menuItems = [
 	{
 		label: 'menu_item_dashboard',
 		url: '/',
+		icon: <DashboardIcon />,
+	},
+	{
+		label: 'menu_item_income',
+		url: '/income',
+		icon: <AccountBalanceIcon />,
 	},
 	{
 		label: 'menu_item_budget',
 		url: '/budgets',
+		icon: <AccountBalanceWalletIcon />,
 	},
 ]
 
@@ -91,10 +101,6 @@ const Layout = (props) => {
 
 	const handleDrawerClose = () => {
 		setOpen(false)
-	}
-
-	const handleRedirect = (e, url) => {
-		navigate(url)
 	}
 
 	const handleListItemClick = (e, index, url) => {
