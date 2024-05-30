@@ -1,32 +1,35 @@
 name: Deploy to Kubernetes
 
 on:
-  push:
-    branches:
-      - main
+ push:
+  branches:
+   - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+ build:
+  runs-on: ubuntu-latest
 
-    steps:
-      - name: Install kubectl
-        run: |
-          sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg
-          curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-          echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-          sudo apt-get update
-          sudo apt-get install -y kubectl
+  steps:
+   # Other build steps...
+   - name: Install kubectl
+     run: |
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      chmod +x kubectl
+      sudo mv kubectl /usr/local/bin/
 
-      - name: Decode and configure Kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
+   - name: Decode and configure Kubeconfig
+     run: |
+        mkdir -p $HOME/.kube
+        echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
 
-      - name: Configure kubectl with service account
-        run: |
-          kubectl config set-context --current --namespace=mern-budget
-          kubectl config set-credentials github-actions --token="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
-          kubectl config set-context --current --user=github-actions
 
-      # Add additional steps for deployment or other actions
+   - name: Configure kubectl with service account
+     run: |
+      kubectl config set-context --current --namespace=mern-budget
+      kubectl config set-credentials github-actions --token="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
+      kubectl config set-context --current --user=github-actions
+
+   - name: Deploy to Kubernetes
+     run: |
+      kubectl set image deployment/mern-budget-backend backend=mbewd/mern-budget-backend:latest -n mern-budget
+      kubectl set image deployment/mern-budget-frontend frontend=mbewd/mern-budget-frontend:latest -n mern-budget|
