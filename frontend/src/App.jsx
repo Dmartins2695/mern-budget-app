@@ -1,6 +1,11 @@
-import { useState } from 'react'
-import useAuth from './hooks/useAuth'
 import axios from 'axios'
+import { useState } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import Layout from './components/layout'
+import useAuth from './hooks/useAuth'
+import Budget from './pages/budget'
+import Dashboard from './pages/dashboard'
+import ErrorPage from './pages/errorPage'
 
 axios.defaults.baseURL = 'http://localhost:5000'
 
@@ -33,10 +38,25 @@ const Public = () => {
 	return <>OUT OF THE APP</>
 }
 
-function App() {
+function Dummy() {
 	const { isLogin, token } = useAuth()
 
 	return <>{isLogin ? <Private token={token} /> : <Public />}</>
+}
+
+const App = () => {
+	return (
+		<div className='App'>
+			<Routes>
+				<Route element={<Layout />}>
+					<Route path='/budgets' element={<Budget />} />
+					<Route path='/income' element={<Budget />} />
+					<Route path='/' element={<Dashboard />} />
+					<Route path='/404' element={<ErrorPage />} />
+				</Route>
+			</Routes>
+		</div>
+	)
 }
 
 export default App
