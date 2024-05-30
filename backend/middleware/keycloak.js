@@ -8,7 +8,7 @@ const keycloakConfig = {
 	serverUrl: 'http://localhost:8080',
 	realm: 'mern-budget',
 	//realmPublicKey: process.env.KEYCLOAK_SECRET_LOCAL,
-	realmPublicKey: process.env.KEYCLOAK_SECRET,
+	realmPublicKey: process.env.KEYCLOAK_KEY_CLUSTER,
 }
 
 const memoryStore = new session.MemoryStore()

@@ -8,15 +8,11 @@ const IncomeSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		budgetId: {
-			type: Schema.Types.ObjectId,
-			ref: 'Budget',
-		},
-		source: {
-			type: String,
+		amount: {
+			type: Number,
 			required: true,
 		},
-		amount: {
+		userId: {
 			type: Number,
 			required: true,
 		},
