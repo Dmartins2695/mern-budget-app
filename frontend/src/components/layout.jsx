@@ -20,6 +20,8 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import useDictionary from '../hooks/useDictionary'
 import Navbar from './navbar'
 
+import logo from '../resources/logo1.png'
+
 const drawerWidth = 240
 
 const menuItems = [
@@ -108,7 +110,7 @@ const Layout = (props) => {
 				anchor='left'
 				open={open}>
 				<DrawerHeader>
-					<Typography>Image pending...</Typography>
+					<img src={logo} alt='Logo' />
 					<IconButton onClick={handleDrawerClose}>
 						{theme.direction === 'ltr' ? (
 							<ChevronLeftIcon sx={{ color: theme.palette.primary.contrastText }} />
