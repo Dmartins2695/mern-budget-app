@@ -8,8 +8,9 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import useDictionary from '../hooks/useDictionary'
-import useAuth from '../hooks/useAuth'
 import { useTheme } from '@emotion/react'
+import { useDispatch, useSelector } from 'react-redux'
+import { performLogin, performLogout } from '../feature/auth/authSlice'
 
 const drawerWidth = 240
 
@@ -33,11 +34,19 @@ const AppBar = styled(MuiAppBar, {
 const Navbar = (props) => {
 	const { handleDrawerOpen, open, setIsDarkMode } = props
 	const { labelIn } = useDictionary()
-	const { isLogin, login } = useAuth()
 	const theme = useTheme()
+	const dispatch = useDispatch()
+	const { isLogin, token } = useSelector((state) => state.auth)
 
 	const handleThemeMode = (e) => {
 		setIsDarkMode((prev) => !prev)
+	}
+
+	const login = () => {
+		dispatch(performLogin())
+	}
+	const logout = () => {
+		dispatch(performLogout())
 	}
 
 	return (
@@ -77,7 +86,7 @@ const Navbar = (props) => {
 						/>
 						{/* login button, notifications*/}
 						{isLogin ? (
-							<Button color={'inherit'} variant='text'>
+							<Button color={'inherit'} variant='text' onClick={logout}>
 								Logout
 							</Button>
 						) : (
