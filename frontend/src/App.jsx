@@ -6,6 +6,10 @@ import useAuth from './hooks/useAuth'
 import Budget from './pages/budget'
 import Dashboard from './pages/dashboard'
 import ErrorPage from './pages/errorPage'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { ThemeProvider } from '@emotion/react'
+import { CssBaseline } from '@mui/material'
+import { lightTheme, darkTheme } from './config/theme/theme'
 
 axios.defaults.baseURL = 'http://localhost:5000'
 
@@ -45,17 +49,24 @@ function Dummy() {
 }
 
 const App = () => {
+	const [isDarkMode, setIsDarkMode] = useState(false)
+
 	return (
-		<div className='App'>
-			<Routes>
-				<Route element={<Layout />}>
-					<Route path='/budgets' element={<Budget />} />
-					<Route path='/income' element={<Budget />} />
-					<Route path='/' element={<Dashboard />} />
-					<Route path='/404' element={<ErrorPage />} />
-				</Route>
-			</Routes>
-		</div>
+		<ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+			<CssBaseline />
+			<Router>
+				<div className='App'>
+					<Routes>
+						<Route element={<Layout setIsDarkMode={setIsDarkMode} />}>
+							<Route path='/budgets' element={<Budget />} />
+							<Route path='/income' element={<Budget />} />
+							<Route path='/' element={<Dashboard />} />
+							<Route path='/404' element={<ErrorPage />} />
+						</Route>
+					</Routes>
+				</div>
+			</Router>
+		</ThemeProvider>
 	)
 }
 

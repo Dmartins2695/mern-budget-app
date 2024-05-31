@@ -3,9 +3,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import DashboardIcon from '@mui/icons-material/Dashboard'
-import MenuIcon from '@mui/icons-material/Menu'
-import { Grid, styled, useTheme } from '@mui/material'
-import MuiAppBar from '@mui/material/AppBar'
+import { styled, useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
@@ -15,13 +13,13 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import * as React from 'react'
+
 
 import { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import useDictionary from '../hooks/useDictionary'
+import Navbar from './navbar'
 
 const drawerWidth = 240
 
@@ -62,23 +60,6 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 	}),
 )
 
-const AppBar = styled(MuiAppBar, {
-	shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-	transition: theme.transitions.create(['margin', 'width'], {
-		easing: theme.transitions.easing.sharp,
-		duration: theme.transitions.duration.leavingScreen,
-	}),
-	...(open && {
-		width: `calc(100% - ${drawerWidth}px)`,
-		marginLeft: `${drawerWidth}px`,
-		transition: theme.transitions.create(['margin', 'width'], {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-	}),
-}))
-
 const DrawerHeader = styled('div')(({ theme }) => ({
 	display: 'flex',
 	alignItems: 'center',
@@ -110,28 +91,7 @@ const Layout = (props) => {
 
 	return (
 		<Box sx={{ display: 'flex' }}>
-			<AppBar position='fixed' open={open}>
-				<Toolbar>
-					<Grid container justifyContent={'space-between'} alignItems={'center'}>
-						<Grid item>
-							<IconButton
-								color='inherit'
-								aria-label='open drawer'
-								onClick={handleDrawerOpen}
-								edge='start'
-								sx={{ mr: 2, ...(open && { display: 'none' }) }}>
-								<MenuIcon />
-							</IconButton>
-						</Grid>
-						<Grid item xs={11}>
-							<Typography variant='h6' noWrap component='div'>
-								{labelIn('header_title')}
-							</Typography>
-						</Grid>
-						<Grid item>{/* login button, notifications*/}</Grid>
-					</Grid>
-				</Toolbar>
-			</AppBar>
+			<Navbar open={open} handleDrawerOpen={handleDrawerOpen} setIsDarkMode={props.setIsDarkMode} />
 			<Drawer
 				sx={{
 					'width': drawerWidth,
