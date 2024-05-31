@@ -1,61 +1,49 @@
-import axios from 'axios'
-import { useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { ThemeProvider } from '@emotion/react'
+import { CssBaseline } from '@mui/material'
+import { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Layout from './components/layout'
-import useAuth from './hooks/useAuth'
+import { darkTheme, lightTheme } from './config/theme/theme'
+import { initializeKeycloak } from './feature/auth/authSlice'
 import Budget from './pages/budget'
 import Dashboard from './pages/dashboard'
 import ErrorPage from './pages/errorPage'
 
-axios.defaults.baseURL = 'http://localhost:5000'
-
-const Private = (props) => {
-	const [data, setData] = useState(null)
-
-	const callBackend = () => {
-		const config = {
-			headers: {
-				authorization: `Bearer ${props.token}`,
-			},
-		}
-
-		axios
-			.get('/api/budget', config)
-			.then((res) => setData(res.data))
-			.catch((err) => console.error(err))
-	}
-
-	console.log(data)
-
-	return (
-		<>
-			<div>IN THE APP</div>
-			<button onClick={callBackend}>Fetch data</button>
-		</>
-	)
-}
-const Public = () => {
-	return <>OUT OF THE APP</>
-}
-
-function Dummy() {
-	const { isLogin, token } = useAuth()
-
-	return <>{isLogin ? <Private token={token} /> : <Public />}</>
-}
-
 const App = () => {
+	const [isDarkMode, setIsDarkMode] = useState(false)
+	const isRun = useRef(false)
+	const dispatch = useDispatch()
+	const { isLogin } = useSelector((state) => state.auth)
+	useEffect(() => {
+		if (isRun.current) return
+		isRun.current = true
+		dispatch(initializeKeycloak())
+	}, [dispatch])
+
 	return (
-		<div className='App'>
-			<Routes>
-				<Route element={<Layout />}>
-					<Route path='/budgets' element={<Budget />} />
-					<Route path='/income' element={<Budget />} />
-					<Route path='/' element={<Dashboard />} />
-					<Route path='/404' element={<ErrorPage />} />
-				</Route>
-			</Routes>
-		</div>
+		<ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+			<CssBaseline />
+			<Router>
+				<div className='App'>
+					<Routes>
+						<Route element={<Layout setIsDarkMode={setIsDarkMode} />}>
+							{isLogin && (
+								<>
+									<Route path='/budgets' element={<Budget />} />
+									<Route path='/budgets' element={<Budget />} />
+									<Route path='/income' element={<Budget />} />
+									<Route path='/' element={<Dashboard />} />
+								</>
+							)}
+							<Route path='/' element={<div>Welcome Page</div>} />
+							<Route path='/*' element={<div>Welcome Page</div>} />
+							<Route path='/404' element={<ErrorPage />} />
+						</Route>
+					</Routes>
+				</div>
+			</Router>
+		</ThemeProvider>
 	)
 }
 

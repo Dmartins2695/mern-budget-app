@@ -1,8 +1,9 @@
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
-import MenuIcon from '@mui/icons-material/Menu'
-import { styled, useTheme } from '@mui/material'
-import MuiAppBar from '@mui/material/AppBar'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import { Typography, styled, useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
@@ -12,16 +13,12 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import * as React from 'react'
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 
 import { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import useDictionary from '../hooks/useDictionary'
+import Navbar from './navbar'
 
 const drawerWidth = 240
 
@@ -62,23 +59,6 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 	}),
 )
 
-const AppBar = styled(MuiAppBar, {
-	shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-	transition: theme.transitions.create(['margin', 'width'], {
-		easing: theme.transitions.easing.sharp,
-		duration: theme.transitions.duration.leavingScreen,
-	}),
-	...(open && {
-		width: `calc(100% - ${drawerWidth}px)`,
-		marginLeft: `${drawerWidth}px`,
-		transition: theme.transitions.create(['margin', 'width'], {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-	}),
-}))
-
 const DrawerHeader = styled('div')(({ theme }) => ({
 	display: 'flex',
 	alignItems: 'center',
@@ -110,21 +90,11 @@ const Layout = (props) => {
 
 	return (
 		<Box sx={{ display: 'flex' }}>
-			<AppBar position='fixed' open={open}>
-				<Toolbar>
-					<IconButton
-						color='inherit'
-						aria-label='open drawer'
-						onClick={handleDrawerOpen}
-						edge='start'
-						sx={{ mr: 2, ...(open && { display: 'none' }) }}>
-						<MenuIcon />
-					</IconButton>
-					<Typography variant='h6' noWrap component='div'>
-						{labelIn('header_title')}
-					</Typography>
-				</Toolbar>
-			</AppBar>
+			<Navbar
+				open={open}
+				handleDrawerOpen={handleDrawerOpen}
+				setIsDarkMode={props.setIsDarkMode}
+			/>
 			<Drawer
 				sx={{
 					'width': drawerWidth,
@@ -138,8 +108,13 @@ const Layout = (props) => {
 				anchor='left'
 				open={open}>
 				<DrawerHeader>
+					<Typography>Image pending...</Typography>
 					<IconButton onClick={handleDrawerClose}>
-						{theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+						{theme.direction === 'ltr' ? (
+							<ChevronLeftIcon sx={{ color: theme.palette.primary.contrastText }} />
+						) : (
+							<ChevronRightIcon sx={{ color: theme.palette.primary.contrastText }} />
+						)}
 					</IconButton>
 				</DrawerHeader>
 				<Divider />
@@ -149,8 +124,13 @@ const Layout = (props) => {
 							<ListItemButton
 								selected={selectedIndex === index}
 								onClick={(event) => handleListItemClick(event, index, item.url)}>
-								<ListItemIcon>{item.icon}</ListItemIcon>
-								<ListItemText primary={labelIn(item.label)} />
+								<ListItemIcon sx={{ color: theme.palette.primary.contrastText }}>
+									{item.icon}
+								</ListItemIcon>
+								<ListItemText
+									primary={labelIn(item.label)}
+									primaryTypographyProps={{ color: theme.palette.primary.contrastText }}
+								/>
 							</ListItemButton>
 						</ListItem>
 					))}

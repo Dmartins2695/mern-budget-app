@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import dictionary from '../config/dictionary'
+import dictionary from '../config/dictionary/dictionary'
 
 const useDictionary = (initialLang = 'en') => {
 	const [language, setLanguage] = useState(initialLang)
