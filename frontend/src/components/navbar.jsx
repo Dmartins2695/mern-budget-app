@@ -1,4 +1,3 @@
-import { useTheme } from '@emotion/react'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -9,6 +8,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import useDictionary from '../hooks/useDictionary'
+import useAuth from '../hooks/useAuth'
 
 const drawerWidth = 240
 
@@ -32,8 +32,7 @@ const AppBar = styled(MuiAppBar, {
 const Navbar = (props) => {
 	const { handleDrawerOpen, open, setIsDarkMode } = props
 	const { labelIn } = useDictionary()
-	const theme = useTheme()
-	console.log(theme)
+	const { isLogin, login } = useAuth()
 
 	const handleThemeMode = (e) => {
 		setIsDarkMode((prev) => !prev)
@@ -54,26 +53,39 @@ const Navbar = (props) => {
 						</IconButton>
 					</Grid>
 					<Grid item xs>
-						<Typography variant='h6' noWrap component='div'>
-							{labelIn('header_title')}
-						</Typography>
+						<div
+							style={{
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'space-between',
+							}}>
+							<Typography variant='h6' noWrap component='div'>
+								{labelIn('header_title')}
+							</Typography>
+							<Switch
+								color={'inherit'}
+								onClick={handleThemeMode}
+								icon={<LightModeIcon />}
+								checkedIcon={<DarkModeIcon />}
+								sx={{
+									'& .MuiSwitch-switchBase': {
+										paddingTop: '7px',
+									},
+								}}
+							/>
+						</div>
 					</Grid>
-					<Grid item xs={1}>
+					<Grid item xs={1} sx={{ textAlign: 'center' }}>
 						{/* login button, notifications*/}
-						<Button color={'inherit'} variant='outlined'>
-							Login
-						</Button>
-						<Switch
-							color={'inherit'}
-							onClick={handleThemeMode}
-							icon={<LightModeIcon />}
-							checkedIcon={<DarkModeIcon />}
-							sx={{
-								'& .MuiSwitch-switchBase': {
-									paddingTop: '7px',
-								},
-							}}
-						/>
+						{isLogin ? (
+							<Button color={'inherit'} variant='outlined'>
+								Logout
+							</Button>
+						) : (
+							<Button color={'secondary'} variant='contained' onClick={login}>
+								Login
+							</Button>
+						)}
 					</Grid>
 				</Grid>
 			</Toolbar>
