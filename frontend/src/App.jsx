@@ -4,12 +4,24 @@ import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Layout from './components/layout'
+import { setAuthToken } from './config/axiosInstance'
 import { darkTheme, lightTheme } from './config/theme/theme'
 import { initializeKeycloak } from './feature/auth/authSlice'
 import Budget from './pages/budget'
 import Dashboard from './pages/dashboard'
 import ErrorPage from './pages/errorPage'
-import axiosInstance, { setAuthToken } from './config/axiosInstance'
+import Income from './pages/income'
+
+const Authenticated = (props) => {
+	return (
+		<Routes>
+			<Route path='/budgets' element={<Budget />} />
+			<Route path='/income' element={<Income />} />
+			<Route path='/' element={<Dashboard />} />
+			<Route path='/*' element={<Dashboard />} />
+		</Routes>
+	)
+}
 
 const App = () => {
 	const [isDarkMode, setIsDarkMode] = useState(false)
@@ -26,9 +38,6 @@ const App = () => {
 		setAuthToken(token)
 	}, [token])
 
-	console.log(token)
-	console.log(axiosInstance.defaults.headers)
-
 	return (
 		<ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
 			<CssBaseline />
@@ -36,17 +45,12 @@ const App = () => {
 				<div className='App'>
 					<Routes>
 						<Route element={<Layout setIsDarkMode={setIsDarkMode} />}>
-							{isLogin && (
-								<>
-									<Route path='/budgets' element={<Budget />} />
-									<Route path='/budgets' element={<Budget />} />
-									<Route path='/income' element={<Budget />} />
-									<Route path='/' element={<Dashboard />} />
-								</>
-							)}
-							<Route path='/' element={<div>Welcome Page</div>} />
-							<Route path='/*' element={<div>Welcome Page</div>} />
+							<Route
+								path='*'
+								element={isLogin ? <Authenticated /> : <div>Welcome Page</div>}
+							/>
 							<Route path='/404' element={<ErrorPage />} />
+							<Route path='*' element={<ErrorPage />} />
 						</Route>
 					</Routes>
 				</div>

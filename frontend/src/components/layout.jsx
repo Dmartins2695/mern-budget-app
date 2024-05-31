@@ -74,7 +74,7 @@ const Layout = (props) => {
 	const theme = useTheme()
 	const [open, setOpen] = useState(false)
 	const navigate = useNavigate()
-	const [selectedIndex, setSelectedIndex] = React.useState(0)
+	const [selectedIndex, setSelectedIndex] = React.useState(null)
 	const { labelIn } = useDictionary()
 
 	const handleDrawerOpen = () => {
@@ -110,7 +110,7 @@ const Layout = (props) => {
 				anchor='left'
 				open={open}>
 				<DrawerHeader>
-					<img src={logo} alt='Logo' />
+					<img src={logo} alt='Logo' style={{ height: 100, width: 300 }} />
 					<IconButton onClick={handleDrawerClose}>
 						{theme.direction === 'ltr' ? (
 							<ChevronLeftIcon sx={{ color: theme.palette.primary.contrastText }} />
@@ -122,7 +122,15 @@ const Layout = (props) => {
 				<Divider />
 				<List>
 					{menuItems.map((item, index) => (
-						<ListItem key={item.label} disablePadding>
+						<ListItem
+							key={item.label}
+							disablePadding
+							sx={(theme) => ({
+								bgcolor:
+									selectedIndex === index
+										? theme.palette.primary.main + '80'
+										: 'inherit', // '80' is the hex code for 50% opacity
+							})}>
 							<ListItemButton
 								selected={selectedIndex === index}
 								onClick={(event) => handleListItemClick(event, index, item.url)}>

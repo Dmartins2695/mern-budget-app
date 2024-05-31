@@ -13,7 +13,7 @@ const CategorySchema = new Schema(
 			ref: 'ParentCategory'
 		},
 		userId: {
-			type: Number,
+			type: String,
 			required: true,
 		},
 	},

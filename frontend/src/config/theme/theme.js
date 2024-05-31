@@ -10,6 +10,9 @@ export const lightTheme = createTheme({
 		secondary: {
 			main: '#3c6e71',
 		},
+		paperBackground: {
+			main: '#ededed',
+		},
 		background: {
 			default: '#ffffff',
 			paper: '#353535',
@@ -25,7 +28,7 @@ export const darkTheme = createTheme({
 	palette: {
 		mode: 'dark',
 		primary: {
-			main: '#284b63',
+			main: '#ffffff',
 			contrastText: '#ffffff',
 		},
 		secondary: {
@@ -39,6 +42,9 @@ export const darkTheme = createTheme({
 		text: {
 			primary: '#d9d9d9',
 			secondary: '#ffffff',
+		},
+		paperBackground: {
+			main: '#4e4e4e',
 		},
 	},
 })

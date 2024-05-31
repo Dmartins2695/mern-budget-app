@@ -21,11 +21,14 @@ const filterRequestBodyFields = (allowedFields, body) => {
 }
 
 const getAllTemplate = async (req, res, schema) => {
-	const budgets = await schema.find({ userId: req.user.id }).sort({
-		createdAt: -1,
-	})
-
-	res.status(200).json(budgets)
+	try {
+		const data = await schema.find({ userId: req.user.id }).sort({
+			createdAt: -1,
+		})
+		return res.status(200).json(data)
+	} catch (e) {
+		return res.status(400).json(e)
+	}
 }
 
 const getByIdTemplate = async (req, res, schema, title) => {
@@ -34,14 +37,17 @@ const getByIdTemplate = async (req, res, schema, title) => {
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).json({ error: 'Invalid Id' })
 	}
+	try {
+		const data = await schema.findOne({ _id: id, userId: req.user.id })
 
-	const budget = await schema.findOne({ _id: id, userId: req.user.id })
+		if (!data) {
+			return res.status(404).json({ error: `${title} not Found!` })
+		}
 
-	if (!budget) {
-		return res.status(404).json({ error: `${title} not Found!` })
+		return res.status(200).json(data)
+	} catch (e) {
+		return res.status(400).json(e)
 	}
-
-	res.status(200).json(budget)
 }
 
 const deleteTemplate = async (req, res, schema, title) => {
@@ -50,14 +56,16 @@ const deleteTemplate = async (req, res, schema, title) => {
 	if (!mongoose.Types.ObjectId.isValid(id)) {
 		return res.status(404).json({ error: 'Invalid Id' })
 	}
+	try {
+		const data = await schema.findOneAndDelete({ _id: id, userId: req.user.id })
 
-	const budget = await schema.findOneAndDelete({ _id: id, userId: req.user.id })
-
-	if (!budget) {
-		return res.status(404).json({ error: `${title} not Found!` })
+		if (!data) {
+			return res.status(404).json({ error: `${title} not Found!` })
+		}
+		return res.status(200).json({ message: 'Deleted with success' })
+	} catch (e) {
+		return res.status(400).json(e)
 	}
-
-	res.status(200).json({ message: 'Deleted with success' })
 }
 
 const createTemplate = async (req, res, schema) => {
@@ -65,10 +73,10 @@ const createTemplate = async (req, res, schema) => {
 	const createFields = filterRequestBodyFields(allowedFields, req.body)
 
 	try {
-		const budget = await schema.create({ ...createFields, userId: req.user.id })
-		res.status(200).json(budget)
+		const data = await schema.create({ ...createFields, userId: req.user.id })
+		return res.status(200).json(data)
 	} catch (e) {
-		res.status(400).json({ error: e.message })
+		return res.status(400).json({ error: e.message })
 	}
 }
 
@@ -93,9 +101,9 @@ const updateTemplate = async (req, res, schema, title) => {
 			return res.status(404).json({ error: `${title} not Found!` })
 		}
 
-		res.status(200).json(income)
+		return res.status(200).json(income)
 	} catch (e) {
-		res.status(400).json({ error: e.message })
+		return res.status(400).json({ error: e.message })
 	}
 }
 
