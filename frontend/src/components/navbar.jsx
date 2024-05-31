@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import useDictionary from '../hooks/useDictionary'
 import useAuth from '../hooks/useAuth'
+import { useTheme } from '@emotion/react'
 
 const drawerWidth = 240
 
@@ -33,6 +34,7 @@ const Navbar = (props) => {
 	const { handleDrawerOpen, open, setIsDarkMode } = props
 	const { labelIn } = useDictionary()
 	const { isLogin, login } = useAuth()
+	const theme = useTheme()
 
 	const handleThemeMode = (e) => {
 		setIsDarkMode((prev) => !prev)
@@ -42,47 +44,44 @@ const Navbar = (props) => {
 		<AppBar position='fixed' open={open}>
 			<Toolbar>
 				<Grid container alignItems={'center'}>
-					<Grid item>
-						<IconButton
-							color='inherit'
-							aria-label='open drawer'
-							onClick={handleDrawerOpen}
-							edge='start'
-							sx={{ mr: 2, ...(open && { display: 'none' }) }}>
-							<MenuIcon />
-						</IconButton>
-					</Grid>
 					<Grid item xs>
-						<div
-							style={{
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'space-between',
-							}}>
+						<div style={{ display: 'flex', alignItems: 'center' }}>
+							<IconButton
+								aria-label='open drawer'
+								onClick={handleDrawerOpen}
+								edge='start'
+								sx={{
+									mr: 2,
+									...(open && { display: 'none' }),
+									color: theme.palette.primary.contrastText,
+								}}>
+								<MenuIcon />
+							</IconButton>
 							<Typography variant='h6' noWrap component='div'>
 								{labelIn('header_title')}
 							</Typography>
-							<Switch
-								color={'inherit'}
-								onClick={handleThemeMode}
-								icon={<LightModeIcon />}
-								checkedIcon={<DarkModeIcon />}
-								sx={{
-									'& .MuiSwitch-switchBase': {
-										paddingTop: '7px',
-									},
-								}}
-							/>
 						</div>
 					</Grid>
-					<Grid item xs={1} sx={{ textAlign: 'center' }}>
+					<Grid item>
+						<Switch
+							color={'inherit'}
+							onClick={handleThemeMode}
+							icon={<LightModeIcon />}
+							checkedIcon={<DarkModeIcon />}
+							sx={{
+								'& .MuiSwitch-switchBase': {
+									paddingTop: '7px',
+									marginLeft: 'auto',
+								},
+							}}
+						/>
 						{/* login button, notifications*/}
 						{isLogin ? (
-							<Button color={'inherit'} variant='outlined'>
+							<Button color={'inherit'} variant='text'>
 								Logout
 							</Button>
 						) : (
-							<Button color={'secondary'} variant='contained' onClick={login}>
+							<Button color={'inherit'} variant='outlined' onClick={login}>
 								Login
 							</Button>
 						)}

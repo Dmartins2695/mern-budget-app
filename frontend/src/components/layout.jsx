@@ -3,7 +3,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import DashboardIcon from '@mui/icons-material/Dashboard'
-import { styled, useTheme } from '@mui/material'
+import { Typography, styled, useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
@@ -14,7 +14,6 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import * as React from 'react'
-
 
 import { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
@@ -91,7 +90,11 @@ const Layout = (props) => {
 
 	return (
 		<Box sx={{ display: 'flex' }}>
-			<Navbar open={open} handleDrawerOpen={handleDrawerOpen} setIsDarkMode={props.setIsDarkMode} />
+			<Navbar
+				open={open}
+				handleDrawerOpen={handleDrawerOpen}
+				setIsDarkMode={props.setIsDarkMode}
+			/>
 			<Drawer
 				sx={{
 					'width': drawerWidth,
@@ -105,8 +108,13 @@ const Layout = (props) => {
 				anchor='left'
 				open={open}>
 				<DrawerHeader>
+					<Typography>Image pending...</Typography>
 					<IconButton onClick={handleDrawerClose}>
-						{theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+						{theme.direction === 'ltr' ? (
+							<ChevronLeftIcon sx={{ color: theme.palette.primary.contrastText }} />
+						) : (
+							<ChevronRightIcon sx={{ color: theme.palette.primary.contrastText }} />
+						)}
 					</IconButton>
 				</DrawerHeader>
 				<Divider />
@@ -116,8 +124,13 @@ const Layout = (props) => {
 							<ListItemButton
 								selected={selectedIndex === index}
 								onClick={(event) => handleListItemClick(event, index, item.url)}>
-								<ListItemIcon>{item.icon}</ListItemIcon>
-								<ListItemText primary={labelIn(item.label)} />
+								<ListItemIcon sx={{ color: theme.palette.primary.contrastText }}>
+									{item.icon}
+								</ListItemIcon>
+								<ListItemText
+									primary={labelIn(item.label)}
+									primaryTypographyProps={{ color: theme.palette.primary.contrastText }}
+								/>
 							</ListItemButton>
 						</ListItem>
 					))}
