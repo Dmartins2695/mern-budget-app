@@ -2,5 +2,14 @@ export const en = {
 	header_title: 'Budget App',
 	menu_item_dashboard: 'Dashboard',
 	menu_item_budget: 'Budget',
-	menu_item_income: 'Income'
+	menu_item_income: 'Income',
+	menu_item_category: 'Category',
+	logout_button: 'Logout',
+	login_button: 'Login',
+	new_income: 'Add new Income',
+	new_income_title: 'Income Title',
+	new_income_amount: 'Income Amount',
+	income_button_add: 'Add',
+	incomes_page_title: 'Incomes',
+	missing_data: 'No data to display!',
 }

@@ -54,7 +54,7 @@
      docker push mbewd/mern-budget-backend:latest
      kubectl set image deployment/mern-budget-backend backend=mbewd/mern-budget-backend:latest -n mern-budget
      docker push mbewd/mern-budget-frontend:latest
-     kubectl set image deployment/mern-budget-frontend backend=mbewd/mern-budget-frontend:latest -n mern-budget
+     kubectl set image deployment/mern-budget-frontend frontend=mbewd/mern-budget-frontend:latest -n mern-budget
      ```
 
 7. **Finalize Deployment:**

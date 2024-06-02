@@ -36,7 +36,7 @@ const Navbar = (props) => {
 	const { labelIn } = useDictionary()
 	const theme = useTheme()
 	const dispatch = useDispatch()
-	const { isLogin, token } = useSelector((state) => state.auth)
+	const { isLogin } = useSelector((state) => state.auth)
 
 	const handleThemeMode = (e) => {
 		setIsDarkMode((prev) => !prev)
@@ -55,18 +55,26 @@ const Navbar = (props) => {
 				<Grid container alignItems={'center'}>
 					<Grid item xs>
 						<div style={{ display: 'flex', alignItems: 'center' }}>
-							<IconButton
-								aria-label='open drawer'
-								onClick={handleDrawerOpen}
-								edge='start'
+							{isLogin && (
+								<IconButton
+									aria-label='open drawer'
+									onClick={handleDrawerOpen}
+									edge='start'
+									sx={{
+										mr: 2,
+										...(open && { display: 'none' }),
+										color: theme.palette.primary.contrastText,
+									}}>
+									<MenuIcon />
+								</IconButton>
+							)}
+							<Typography
+								variant='h6'
+								noWrap
+								component='div'
 								sx={{
-									mr: 2,
-									...(open && { display: 'none' }),
 									color: theme.palette.primary.contrastText,
 								}}>
-								<MenuIcon />
-							</IconButton>
-							<Typography variant='h6' noWrap component='div'>
 								{labelIn('header_title')}
 							</Typography>
 						</div>
@@ -84,14 +92,14 @@ const Navbar = (props) => {
 								},
 							}}
 						/>
-						{/* login button, notifications*/}
+						{/*notifications*/}
 						{isLogin ? (
 							<Button color={'inherit'} variant='text' onClick={logout}>
-								Logout
+							{labelIn('logout_button')}
 							</Button>
 						) : (
 							<Button color={'inherit'} variant='outlined' onClick={login}>
-								Login
+							{labelIn('login_button')}
 							</Button>
 						)}
 					</Grid>
