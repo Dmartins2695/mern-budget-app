@@ -17,6 +17,6 @@ spec:
       - name: frontend
         image: mbewd/mern-budget-frontend:latest
         ports:
-        - containerPort: 3000
+        - containerPort: 80  # Change this to 80 to match Nginx serving port
       imagePullSecrets:
         - name: docker-config  # Specify the name of your Kubernetes secret here

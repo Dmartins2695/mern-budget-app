@@ -6,7 +6,10 @@ metadata:
 spec:
   selector:
     app: mern-budget-frontend
+  type: NodePort
   ports:
     - protocol: TCP
       port: 80
       targetPort: 3000
+      nodePort: 30001  # Choose a port in the 30000-32767 range
+      name: site
