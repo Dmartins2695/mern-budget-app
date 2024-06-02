@@ -16,12 +16,14 @@ import Budget from './pages/budget'
 import Dashboard from './pages/dashboard'
 import ErrorPage from './pages/errorPage'
 import Income from './pages/income'
+import Category from './pages/category'
 
 const Authenticated = (props) => {
 	return (
 		<Routes>
 			<Route path='/budgets' element={<Budget />} />
 			<Route path='/income' element={<Income />} />
+			<Route path='/category' element={<Category />} />
 			<Route path='/' element={<Dashboard />} />
 			<Route path='/*' element={<Dashboard />} />
 		</Routes>

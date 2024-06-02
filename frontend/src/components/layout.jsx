@@ -19,7 +19,7 @@ import { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import useDictionary from '../hooks/useDictionary'
 import Navbar from './navbar'
-
+import CategoryIcon from '@mui/icons-material/Category'
 import logo from '../resources/logo1.png'
 import { useSelector } from 'react-redux'
 
@@ -40,6 +40,11 @@ const menuItems = [
 		label: 'menu_item_budget',
 		url: '/budgets',
 		icon: <AccountBalanceWalletIcon />,
+	},
+	{
+		label: 'menu_item_category',
+		url: '/category',
+		icon: <CategoryIcon />,
 	},
 ]
 

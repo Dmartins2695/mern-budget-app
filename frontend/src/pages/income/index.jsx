@@ -17,6 +17,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../config/axiosInstance'
 import { handleStateChange } from '../../utils/stateControlFunctions'
+import useDictionary from '../../hooks/useDictionary'
 
 const Item = styled(Paper)(({ theme, width, height }) => ({
 	padding: 25,
@@ -77,6 +78,7 @@ const IncomeDisplayer = ({ title, amount }) => {
 const NewIncome = (props) => {
 	const { setAddedIncome } = props
 	const theme = useTheme()
+	const { labelIn } = useDictionary()
 	const [newIncomeObject, setNewIncomeObject] = useState({
 		title: '',
 		amount: '',
@@ -108,8 +110,7 @@ const NewIncome = (props) => {
 				mb: 2,
 			}}>
 			<Typography variant='body1' sx={{ mb: 1 }}>
-				{' '}
-				Add a new Income
+				{labelIn('new_income')}
 			</Typography>
 			<Grid container justifyContent={'space-between'} alignItems='center'>
 				<Grid item>
@@ -117,7 +118,7 @@ const NewIncome = (props) => {
 						id='title'
 						variant='standard'
 						value={newIncomeObject.title}
-						label={'Income Title'}
+						label={labelIn('new_income_title')}
 						onChange={(e) => handleStateChange(e, setNewIncomeObject)}
 					/>
 				</Grid>
@@ -126,7 +127,7 @@ const NewIncome = (props) => {
 						id='amount'
 						variant='standard'
 						value={newIncomeObject.amount}
-						label={'Income Amount'}
+						label={labelIn('new_income_amount')}
 						onChange={(e) => {
 							const value = e.target.value
 							if (/^\d*$/.test(value)) {
@@ -144,7 +145,7 @@ const NewIncome = (props) => {
 					onClick={handleAddIncome}
 					size='small'
 					sx={{ mt: 2 }}>
-					Add
+					{labelIn('income_button_add')}
 				</Button>
 			</Grid>
 		</Grid>
@@ -156,6 +157,7 @@ const Income = () => {
 	const [addedIncome, setAddedIncome] = useState(false)
 	const [open, setOpen] = useState(false)
 	const theme = useTheme()
+	const { labelIn } = useDictionary()
 
 	useEffect(() => {
 		const getIncomes = async () => {
@@ -182,7 +184,7 @@ const Income = () => {
 							sx={{ pb: 2 }}>
 							{/* Title of paper */}
 							<Typography variant='h5' display='inline'>
-								Incomes
+							{labelIn('incomes_page_title')}
 							</Typography>
 							{/* Add and close Icon */}
 							<IconButton onClick={handleAddIncome}>
@@ -210,7 +212,7 @@ const Income = () => {
 									border: `1px solid ${theme.palette.primary.main + '12'}`,
 									background: theme.palette.background.default + '61',
 								}}>
-								<Typography>No data to display</Typography>
+								<Typography>{labelIn('missing_data')}</Typography>
 							</div>
 						)}
 					</Item>
