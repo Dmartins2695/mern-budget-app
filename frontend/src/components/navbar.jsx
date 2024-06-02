@@ -66,7 +66,13 @@ const Navbar = (props) => {
 								}}>
 								<MenuIcon />
 							</IconButton>
-							<Typography variant='h6' noWrap component='div'>
+							<Typography
+								variant='h6'
+								noWrap
+								component='div'
+								sx={{
+									color: theme.palette.primary.contrastText,
+								}}>
 								{labelIn('header_title')}
 							</Typography>
 						</div>
@@ -84,7 +90,7 @@ const Navbar = (props) => {
 								},
 							}}
 						/>
-						{/* login button, notifications*/}
+						{/*notifications*/}
 						{isLogin ? (
 							<Button color={'inherit'} variant='text' onClick={logout}>
 								Logout

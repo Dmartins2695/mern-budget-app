@@ -110,16 +110,11 @@ const Layout = (props) => {
 				anchor='left'
 				open={open}>
 				<DrawerHeader>
-					<img src={logo} alt='Logo' style={{ height: 100, width: 300 }} />
+					<img src={logo} alt='Logo' style={{ height: 80, width: 300 }} />
 					<IconButton onClick={handleDrawerClose}>
-						{theme.direction === 'ltr' ? (
-							<ChevronLeftIcon sx={{ color: theme.palette.primary.contrastText }} />
-						) : (
-							<ChevronRightIcon sx={{ color: theme.palette.primary.contrastText }} />
-						)}
+						{theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
 					</IconButton>
 				</DrawerHeader>
-				<Divider />
 				<List>
 					{menuItems.map((item, index) => (
 						<ListItem
@@ -134,13 +129,8 @@ const Layout = (props) => {
 							<ListItemButton
 								selected={selectedIndex === index}
 								onClick={(event) => handleListItemClick(event, index, item.url)}>
-								<ListItemIcon sx={{ color: theme.palette.primary.contrastText }}>
-									{item.icon}
-								</ListItemIcon>
-								<ListItemText
-									primary={labelIn(item.label)}
-									primaryTypographyProps={{ color: theme.palette.primary.contrastText }}
-								/>
+								<ListItemIcon>{item.icon}</ListItemIcon>
+								<ListItemText primary={labelIn(item.label)} />
 							</ListItemButton>
 						</ListItem>
 					))}
