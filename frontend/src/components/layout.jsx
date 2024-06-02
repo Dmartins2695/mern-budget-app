@@ -21,6 +21,7 @@ import useDictionary from '../hooks/useDictionary'
 import Navbar from './navbar'
 
 import logo from '../resources/logo1.png'
+import { useSelector } from 'react-redux'
 
 const drawerWidth = 240
 
@@ -76,6 +77,7 @@ const Layout = (props) => {
 	const navigate = useNavigate()
 	const [selectedIndex, setSelectedIndex] = React.useState(null)
 	const { labelIn } = useDictionary()
+	const { isLogin } = useSelector((state) => state.auth)
 
 	const handleDrawerOpen = () => {
 		setOpen(true)
@@ -97,49 +99,58 @@ const Layout = (props) => {
 				handleDrawerOpen={handleDrawerOpen}
 				setIsDarkMode={props.setIsDarkMode}
 			/>
-			<Drawer
-				sx={{
-					'width': drawerWidth,
-					'flexShrink': 0,
-					'& .MuiDrawer-paper': {
-						width: drawerWidth,
-						boxSizing: 'border-box',
-					},
-				}}
-				variant='persistent'
-				anchor='left'
-				open={open}>
-				<DrawerHeader>
-					<img src={logo} alt='Logo' style={{ height: 80, width: 300 }} />
-					<IconButton onClick={handleDrawerClose}>
-						{theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-					</IconButton>
-				</DrawerHeader>
-				<List>
-					{menuItems.map((item, index) => (
-						<ListItem
-							key={item.label}
-							disablePadding
-							sx={(theme) => ({
-								bgcolor:
-									selectedIndex === index
-										? theme.palette.primary.main + '80'
-										: 'inherit', // '80' is the hex code for 50% opacity
-							})}>
-							<ListItemButton
-								selected={selectedIndex === index}
-								onClick={(event) => handleListItemClick(event, index, item.url)}>
-								<ListItemIcon>{item.icon}</ListItemIcon>
-								<ListItemText primary={labelIn(item.label)} />
-							</ListItemButton>
-						</ListItem>
-					))}
-				</List>
-			</Drawer>
-			<Main open={open}>
-				<DrawerHeader />
-				<Outlet />
-			</Main>
+			{isLogin ? (
+				<>
+					<Drawer
+						sx={{
+							'width': drawerWidth,
+							'flexShrink': 0,
+							'& .MuiDrawer-paper': {
+								width: drawerWidth,
+								boxSizing: 'border-box',
+							},
+						}}
+						variant='persistent'
+						anchor='left'
+						open={open}>
+						<DrawerHeader>
+							<img src={logo} alt='Logo' style={{ height: 80, width: 300 }} />
+							<IconButton onClick={handleDrawerClose}>
+								{theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+							</IconButton>
+						</DrawerHeader>
+						<List>
+							{menuItems.map((item, index) => (
+								<ListItem
+									key={item.label}
+									disablePadding
+									sx={(theme) => ({
+										bgcolor:
+											selectedIndex === index
+												? theme.palette.primary.main + '80'
+												: 'inherit', // '80' is the hex code for 50% opacity
+									})}>
+									<ListItemButton
+										selected={selectedIndex === index}
+										onClick={(event) => handleListItemClick(event, index, item.url)}>
+										<ListItemIcon>{item.icon}</ListItemIcon>
+										<ListItemText primary={labelIn(item.label)} />
+									</ListItemButton>
+								</ListItem>
+							))}
+						</List>
+					</Drawer>
+
+					<Main open={open}>
+						<DrawerHeader />
+						<Outlet />
+					</Main>
+				</>
+			) : (
+				<div style={{ paddingTop: 80, paddingLeft: 15 }}>
+					<Outlet />
+				</div>
+			)}
 		</Box>
 	)
 }

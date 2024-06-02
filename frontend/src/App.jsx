@@ -2,7 +2,12 @@ import { ThemeProvider } from '@emotion/react'
 import { CssBaseline } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import {
+	Navigate,
+	Route,
+	BrowserRouter as Router,
+	Routes,
+} from 'react-router-dom'
 import Layout from './components/layout'
 import { setAuthToken } from './config/axiosInstance'
 import { darkTheme, lightTheme } from './config/theme/theme'
@@ -47,8 +52,11 @@ const App = () => {
 						<Route element={<Layout setIsDarkMode={setIsDarkMode} />}>
 							<Route
 								path='*'
-								element={isLogin ? <Authenticated /> : <div>Welcome Page</div>}
+								element={
+									isLogin ? <Authenticated /> : <Navigate replace to={'/welcome'} />
+								}
 							/>
+							<Route path='/welcome' element={<div>Welcome page</div>} />
 							<Route path='/404' element={<ErrorPage />} />
 							<Route path='*' element={<ErrorPage />} />
 						</Route>
