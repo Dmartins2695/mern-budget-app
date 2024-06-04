@@ -129,7 +129,10 @@ const permCategories = [
 
 const createParentCategories = () => {
 	permCategories.forEach(async (item) => {
-		const created = await ParentCategoryModel.create(item)
+		const exists = await ParentCategoryModel.findOne({ title: item.title })
+		if (!exists) {
+			await ParentCategoryModel.create(item)
+		}
 	})
 	console.log('* Static Categories Created *')
 }

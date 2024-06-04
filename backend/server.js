@@ -31,7 +31,6 @@ app.use((req, res, next) => {
 	console.log('request path->', req.path)
 	next()
 })
-createParentCategories()
 setupRoutes(app, keycloak)
 
 app.get('/', (req, res) => {
@@ -50,6 +49,7 @@ app.get('*', (req, res) => {
 mongoose
 	.connect(mongoURI, {})
 	.then(() => {
+		createParentCategories()
 		console.log(`Connected to MongoDB ${mongoURI}`)
 	})
 	.catch((err) => {
