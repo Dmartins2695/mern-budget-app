@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const ParentCategoryModel = require('../models/ParentCategoryModel')
 
 const getAllowedFields = (schema) => {
 	return Object.keys(schema.paths).filter(
@@ -107,6 +108,32 @@ const updateTemplate = async (req, res, schema, title) => {
 	}
 }
 
+const permCategories = [
+	{ title: 'Auto & Transport' },
+	{ title: 'Bills & Utilities' },
+	{ title: 'Business Services' },
+	{ title: 'Education' },
+	{ title: 'Education' },
+	{ title: 'Entertainment' },
+	{ title: 'Fees & Charges' },
+	{ title: 'Financial' },
+	{ title: 'Food & Dinning' },
+	{ title: 'Gifts & Donations' },
+	{ title: 'Health & Fitness' },
+	{ title: 'Home' },
+	{ title: 'Investments' },
+	{ title: 'Kids' },
+	{ title: 'Loans' },
+	{ title: 'Misc Expenses' },
+]
+
+const createParentCategories = () => {
+	permCategories.forEach(async (item) => {
+		const created = await ParentCategoryModel.create(item)
+	})
+	console.log('* Static Categories Created *')
+}
+
 module.exports = {
 	getAllowedFields,
 	filterRequestBodyFields,
@@ -115,4 +142,5 @@ module.exports = {
 	deleteTemplate,
 	getByIdTemplate,
 	getAllTemplate,
+	createParentCategories,
 }

@@ -7,6 +7,7 @@ const path = require('path')
 const { keycloak, setupKeycloak } = require('./middleware/keycloak')
 const addUserToRequest = require('./middleware/addUserToRequest')
 const { setupRoutes } = require('./routes/routesIndex')
+const { createParentCategories } = require('./controllers/utils')
 
 dotenv.config()
 
@@ -25,11 +26,12 @@ app.use(cors())
 app.use(express.json())
 setupKeycloak(app)
 app.use(addUserToRequest)
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
 	console.log('request method->', req.method)
 	console.log('request path->', req.path)
 	next()
 })
+createParentCategories()
 setupRoutes(app, keycloak)
 
 app.get('/', (req, res) => {
