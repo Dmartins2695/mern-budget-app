@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../config/axiosInstance'
 import { handleStateChange } from '../../utils/stateControlFunctions'
 import useDictionary from '../../hooks/useDictionary'
+import { highlightSelected } from '../../utils/styleFunctions'
 
 const Item = styled(Paper)(({ theme, width, height }) => ({
 	padding: 25,
@@ -44,10 +45,7 @@ const IncomeDisplayer = ({ title, amount, index, selected, setSelected }) => {
 					<AccordionSummary
 						sx={{
 							borderRadius: '5px',
-							backgroundColor:
-								index === selected
-									? theme.palette.primary.main + '61'
-									: theme.palette.background.contrast,
+							backgroundColor: highlightSelected(selected, index, theme, 'contrast'),
 						}}
 						onClick={() => setSelected(index)}>
 						<Grid container alignItems='center' justifyContent='space-between'>
