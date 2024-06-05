@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const ParentCategoryModel = require('../models/ParentCategoryModel')
+const ParentCategory = require('../models/ParentCategoryModel')
 
 const getAllowedFields = (schema) => {
 	return Object.keys(schema.paths).filter(
@@ -129,9 +129,9 @@ const permCategories = [
 
 const createParentCategories = () => {
 	permCategories.forEach(async (item) => {
-		const exists = await ParentCategoryModel.findOne({ title: item.title })
+		const exists = await ParentCategory.findOne({ title: item.title })
 		if (!exists) {
-			await ParentCategoryModel.create(item)
+			await ParentCategory.create(item)
 		}
 	})
 	console.log('* Static Categories Created *')
