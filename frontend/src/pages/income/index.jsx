@@ -26,7 +26,7 @@ const Item = styled(Paper)(({ theme, width, height }) => ({
 	marginLeft: 3,
 }))
 
-const IncomeDisplayer = ({ title, amount }) => {
+const IncomeDisplayer = ({ title, amount, index, selected, setSelected }) => {
 	const theme = useTheme()
 
 	return (
@@ -45,9 +45,11 @@ const IncomeDisplayer = ({ title, amount }) => {
 						sx={{
 							borderRadius: '5px',
 							backgroundColor:
-								//theme.palette.mode === 'dark' ? '#ffffff0d' : '#00000015',
-								theme.palette.background.contrast,
-						}}>
+								index === selected
+									? theme.palette.primary.main + '61'
+									: theme.palette.background.contrast,
+						}}
+						onClick={() => setSelected(index)}>
 						<Grid container alignItems='center' justifyContent='space-between'>
 							<Typography variant='body1' display='inline'>
 								{title}
@@ -158,6 +160,7 @@ const Income = () => {
 	const [open, setOpen] = useState(false)
 	const theme = useTheme()
 	const { labelIn } = useDictionary()
+	const [selected, setSelected] = useState(null)
 
 	useEffect(() => {
 		const getIncomes = async () => {
@@ -184,7 +187,7 @@ const Income = () => {
 							sx={{ pb: 2 }}>
 							{/* Title of paper */}
 							<Typography variant='h5' display='inline'>
-							{labelIn('incomes_page_title')}
+								{labelIn('incomes_page_title')}
 							</Typography>
 							{/* Add and close Icon */}
 							<IconButton onClick={handleAddIncome}>
@@ -200,6 +203,9 @@ const Income = () => {
 									key={`${item.title}-${index}`}
 									title={item.title}
 									amount={item.amount}
+									index={index}
+									selected={selected}
+									setSelected={setSelected}
 								/>
 							)
 						})}
