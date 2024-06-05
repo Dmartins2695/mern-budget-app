@@ -132,8 +132,8 @@ const Layout = (props) => {
 									sx={(theme) => ({
 										bgcolor:
 											selectedIndex === index
-												? theme.palette.primary.main + '80'
-												: 'inherit', // '80' is the hex code for 50% opacity
+												? theme.palette.primary.main + '61'
+												: 'inherit',
 									})}>
 									<ListItemButton
 										selected={selectedIndex === index}
