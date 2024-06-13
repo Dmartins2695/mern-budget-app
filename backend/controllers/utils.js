@@ -74,8 +74,12 @@ const createTemplate = async (req, res, schema) => {
 	const createFields = filterRequestBodyFields(allowedFields, req.body)
 
 	try {
-		const data = await schema.create({ ...createFields, userId: req.user.id })
-		return res.status(200).json(data)
+		const exists = await schema.findOne({ ...createFields })
+		if (!exists) {
+			const data = await schema.create({ ...createFields, userId: req.user.id })
+			return res.status(200).json(data)
+		}
+		return res.status(400).json({ error: 'Object already exists in database' })
 	} catch (e) {
 		return res.status(400).json({ error: e.message })
 	}

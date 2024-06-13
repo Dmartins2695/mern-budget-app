@@ -47,7 +47,8 @@ const IncomeDisplayer = ({ title, amount, index, selected, setSelected }) => {
 							borderRadius: '5px',
 							backgroundColor: highlightSelected(selected, index, theme, 'contrast'),
 						}}
-						onClick={() => setSelected(index)}>
+						onClick={() => setSelected(index)}
+						>
 						<Grid container alignItems='center' justifyContent='space-between'>
 							<Typography variant='body1' display='inline'>
 								{title}
