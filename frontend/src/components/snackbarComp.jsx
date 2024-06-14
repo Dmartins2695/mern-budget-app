@@ -4,7 +4,7 @@ import { setCloseSnackbar } from '../feature/snackbar/snackbarSlice'
 
 const SnackbarComp = () => {
 	const dispatch = useDispatch()
-	const { severity, variant, snackMessage, open } = useSelector(
+	const { severity, variant, message, open } = useSelector(
 		(state) => state.snackbar,
 	)
 
@@ -27,7 +27,7 @@ const SnackbarComp = () => {
 				severity={severity}
 				variant={variant}
 				sx={{ width: '100%' }}>
-				{snackMessage}
+				{message}
 			</Alert>
 		</Snackbar>
 	)

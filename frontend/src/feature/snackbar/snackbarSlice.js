@@ -6,14 +6,14 @@ const snackbarSlice = createSlice({
 		open: false,
 		severity: '',
 		variant: '',
-		snackMessage: '',
+		message: '',
 	},
 	reducers: {
 		setCallSnackbar(state, action) {
 			state.open = true
 			state.severity = action.payload.severity
 			state.variant = action.payload.variant
-			state.snackMessage = action.payload.snackMessage
+			state.message = action.payload.message
 		},
 		setCloseSnackbar(state, action) {
 			state.open = action.payload
