@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const ParentCategory = require('../models/ParentCategoryModel')
 
 const getAllowedFields = (schema) => {
 	return Object.keys(schema.paths).filter(
@@ -73,8 +74,12 @@ const createTemplate = async (req, res, schema) => {
 	const createFields = filterRequestBodyFields(allowedFields, req.body)
 
 	try {
-		const data = await schema.create({ ...createFields, userId: req.user.id })
-		return res.status(200).json(data)
+		const exists = await schema.findOne({ ...createFields })
+		if (!exists) {
+			const data = await schema.create({ ...createFields, userId: req.user.id })
+			return res.status(200).json(data)
+		}
+		return res.status(400).json({ error: 'Object already exists in database' })
 	} catch (e) {
 		return res.status(400).json({ error: e.message })
 	}
@@ -107,6 +112,35 @@ const updateTemplate = async (req, res, schema, title) => {
 	}
 }
 
+const permCategories = [
+	{ title: 'Auto & Transport' },
+	{ title: 'Bills & Utilities' },
+	{ title: 'Business Services' },
+	{ title: 'Education' },
+	{ title: 'Education' },
+	{ title: 'Entertainment' },
+	{ title: 'Fees & Charges' },
+	{ title: 'Financial' },
+	{ title: 'Food & Dinning' },
+	{ title: 'Gifts & Donations' },
+	{ title: 'Health & Fitness' },
+	{ title: 'Home' },
+	{ title: 'Investments' },
+	{ title: 'Kids' },
+	{ title: 'Loans' },
+	{ title: 'Misc Expenses' },
+]
+
+const createParentCategories = () => {
+	permCategories.forEach(async (item) => {
+		const exists = await ParentCategory.findOne({ title: item.title })
+		if (!exists) {
+			await ParentCategory.create(item)
+		}
+	})
+	console.log('* Static Categories Created *')
+}
+
 module.exports = {
 	getAllowedFields,
 	filterRequestBodyFields,
@@ -115,4 +149,5 @@ module.exports = {
 	deleteTemplate,
 	getByIdTemplate,
 	getAllTemplate,
+	createParentCategories,
 }

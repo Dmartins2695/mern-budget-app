@@ -18,6 +18,10 @@ import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../config/axiosInstance'
 import { handleStateChange } from '../../utils/stateControlFunctions'
 import useDictionary from '../../hooks/useDictionary'
+import { highlightSelected } from '../../utils/styleFunctions'
+import { setIncomes } from '../../feature/data/incomeSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { setCallSnackbar } from '../../feature/snackbar/snackbarSlice'
 
 const Item = styled(Paper)(({ theme, width, height }) => ({
 	padding: 25,
@@ -26,7 +30,7 @@ const Item = styled(Paper)(({ theme, width, height }) => ({
 	marginLeft: 3,
 }))
 
-const IncomeDisplayer = ({ title, amount }) => {
+const IncomeDisplayer = ({ title, amount, index, selected, setSelected }) => {
 	const theme = useTheme()
 
 	return (
@@ -44,10 +48,9 @@ const IncomeDisplayer = ({ title, amount }) => {
 					<AccordionSummary
 						sx={{
 							borderRadius: '5px',
-							backgroundColor:
-								//theme.palette.mode === 'dark' ? '#ffffff0d' : '#00000015',
-								theme.palette.background.contrast,
-						}}>
+							backgroundColor: highlightSelected(selected, index, theme, 'contrast'),
+						}}
+						onClick={() => setSelected(index)}>
 						<Grid container alignItems='center' justifyContent='space-between'>
 							<Typography variant='body1' display='inline'>
 								{title}
@@ -76,9 +79,10 @@ const IncomeDisplayer = ({ title, amount }) => {
 }
 
 const NewIncome = (props) => {
-	const { setAddedIncome } = props
+	const { getIncomes } = props
 	const theme = useTheme()
 	const { labelIn } = useDictionary()
+	const dispatch = useDispatch()
 	const [newIncomeObject, setNewIncomeObject] = useState({
 		title: '',
 		amount: '',
@@ -88,8 +92,13 @@ const NewIncome = (props) => {
 		const addIncome = async () => {
 			const response = await axiosInstance.post('/api/income', newIncomeObject)
 			if (response.status === 200) {
-				setAddedIncome(true)
-				// add snackbar alert to success with name of created Income
+				getIncomes()
+				dispatch(
+					setCallSnackbar({
+						severity: 'success',
+						message: labelIn('created_new_income'),
+					}),
+				)
 			}
 		}
 
@@ -153,20 +162,30 @@ const NewIncome = (props) => {
 }
 
 const Income = () => {
-	const [incomes, setIncomes] = useState([])
-	const [addedIncome, setAddedIncome] = useState(false)
+	const { incomes } = useSelector((state) => state.incomes)
+	const dispatch = useDispatch()
 	const [open, setOpen] = useState(false)
 	const theme = useTheme()
 	const { labelIn } = useDictionary()
+	const [selected, setSelected] = useState(null)
+
+	const getIncomes = async () => {
+		try {
+			const response = await axiosInstance.get('/api/income')
+			dispatch(setIncomes(response.data))
+		} catch (e) {
+			dispatch(
+				setCallSnackbar({
+					severity: 'error',
+					message: labelIn('failed_fetch_incomes'),
+				}),
+			)
+		}
+	}
 
 	useEffect(() => {
-		const getIncomes = async () => {
-			const response = await axiosInstance.get('/api/income')
-			setIncomes(response.data)
-		}
 		getIncomes()
-		setAddedIncome(false)
-	}, [addedIncome])
+	}, [])
 
 	const handleAddIncome = () => {
 		setOpen((prev) => !prev)
@@ -184,7 +203,7 @@ const Income = () => {
 							sx={{ pb: 2 }}>
 							{/* Title of paper */}
 							<Typography variant='h5' display='inline'>
-							{labelIn('incomes_page_title')}
+								{labelIn('incomes_page_title')}
 							</Typography>
 							{/* Add and close Icon */}
 							<IconButton onClick={handleAddIncome}>
@@ -192,7 +211,7 @@ const Income = () => {
 							</IconButton>
 						</Grid>
 						{/* Add new Income component and logic */}
-						{open && <NewIncome setAddedIncome={setAddedIncome} />}
+						{open && <NewIncome getIncomes={getIncomes} />}
 						{/* Render Income data */}
 						{incomes.map((item, index) => {
 							return (
@@ -200,6 +219,9 @@ const Income = () => {
 									key={`${item.title}-${index}`}
 									title={item.title}
 									amount={item.amount}
+									index={index}
+									selected={selected}
+									setSelected={setSelected}
 								/>
 							)
 						})}

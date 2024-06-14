@@ -1,21 +1,31 @@
 const express = require('express')
-const {getAllCategories,getCategoryById, createNewCategory, deleteCategory, updateCategory} = require('../controllers/categoryController')
+const {
+	getAllCategories,
+	getCategoryById,
+	createNewCategory,
+	deleteCategory,
+	updateCategory,
+	getCategoryByParentId,
+} = require('../controllers/categoryController')
 
 const router = express.Router()
 
-//Get all Budgets
+//Get all Category
 router.get('/', getAllCategories)
 
-//Get Budget By Id
+//Get Category By Id
 router.get('/:id', getCategoryById)
 
-//Create Budget
-router.post('/',createNewCategory )
+//Get Category By Parent Id
+router.get('/parent/:id', getCategoryByParentId)
 
-//Delete Budget
+//Create Category
+router.post('/', createNewCategory)
+
+//Delete Category
 router.delete('/:id', deleteCategory)
 
-//Update Budget
+//Update Category
 router.patch('/:id', updateCategory)
 
 module.exports = router
