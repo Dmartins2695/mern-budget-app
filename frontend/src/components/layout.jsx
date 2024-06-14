@@ -22,6 +22,7 @@ import Navbar from './navbar'
 import CategoryIcon from '@mui/icons-material/Category'
 import logo from '../resources/logo1.png'
 import { useSelector } from 'react-redux'
+import SnackbarComp from './snackbarComp'
 
 const drawerWidth = 240
 
@@ -148,6 +149,7 @@ const Layout = (props) => {
 
 					<Main open={open}>
 						<DrawerHeader />
+						<SnackbarComp />
 						<Outlet />
 					</Main>
 				</>
