@@ -18,6 +18,7 @@ import useDictionary from '../../hooks/useDictionary'
 import { makeRequest } from '../../utils/resquestTemplate'
 import { DisplayParentCategories } from './components/displayParentCategories'
 import { DisplaySubCategories } from './components/displaySubCategories'
+import AddIcon from '@mui/icons-material/Add'
 
 const Category = () => {
 	const { parentCategories } = useSelector((state) => state.category)
@@ -137,14 +138,8 @@ const Category = () => {
 								onClick={handleAddCategory}
 								size='small'
 								sx={{ mt: 2 }}
-								loadingIndicator={
-									<CircularProgress
-										sx={{
-											color: 'white',
-										}}
-										size={24}
-									/>
-								}>
+								loadingPosition='start'
+								startIcon={<AddIcon />}>
 								{labelIn('category_button_add')}
 							</LoadingButton>
 						</Grid>
