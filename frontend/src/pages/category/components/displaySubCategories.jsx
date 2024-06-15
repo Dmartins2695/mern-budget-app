@@ -13,13 +13,9 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import axiosInstance from '../../../config/axiosInstance'
-import {
-	setModalButtonLoading,
-	setModalLoading,
-} from '../../../feature/loading/loadingSlice'
-import { setCallSnackbar } from '../../../feature/snackbar/snackbarSlice'
+import { setModalButtonLoading } from '../../../feature/loading/loadingSlice'
 import useDictionary from '../../../hooks/useDictionary'
+import { makeRequest } from '../../../utils/resquestTemplate'
 
 export const DisplaySubCategories = (props) => {
 	const { item, getSubCategories } = props
@@ -33,33 +29,18 @@ export const DisplaySubCategories = (props) => {
 	}
 
 	const handleDeleteCategory = () => {
-		const deleteCategory = async () => {
-			try {
-				const response = await axiosInstance.delete(`/api/category/${item._id}`)
-				if (response.status === 200) {
-					getSubCategories()
-					dispatch(setModalLoading(false))
-					handleOpenModalState()
-				} else {
-					dispatch(
-						setCallSnackbar({ severity: 'error', message: response.data.error }),
-					)
-				}
-			} catch (e) {
-				console.log(e)
-				dispatch(setModalButtonLoading(false))
-				dispatch(
-					setCallSnackbar({
-						severity: 'error',
-						message: e.response.data.error || e.response.statusText,
-					}),
-				)
-			}
+		const handleResponse = () => {
+			getSubCategories()
+			handleOpenModalState()
 		}
-		dispatch(setModalButtonLoading(true))
-		setTimeout(() => {
-			deleteCategory()
-		}, 2000)
+
+		makeRequest({
+			dispatch,
+			handleResponse,
+			method: 'delete',
+			url: `/api/category/${item._id}`,
+			loadingAction: setModalButtonLoading,
+		})
 	}
 
 	return (
@@ -114,6 +95,7 @@ export const DisplaySubCategories = (props) => {
 							loadingPosition='start'
 							variant='contained'
 							color='error'
+							startIcon={<DeleteOutlineIcon />}
 							size={'small'}>
 							{labelIn('delete_category_modal_confirm')}
 						</LoadingButton>
