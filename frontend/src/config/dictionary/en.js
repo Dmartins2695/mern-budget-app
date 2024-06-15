@@ -21,4 +21,5 @@ export const en = {
 	categories: 'Categories',
 	create_new_category_title: 'Create New Category',
 	new_category: 'New Category Title',
+	menu_item_transactions: 'Transactions',
 }

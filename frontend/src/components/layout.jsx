@@ -22,6 +22,7 @@ import useDictionary from '../hooks/useDictionary'
 import logo from '../resources/logo1.png'
 import Navbar from './navbar'
 import SnackbarComp from './snackbarComp'
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 
 const drawerWidth = 240
 
@@ -32,11 +33,6 @@ const menuItems = [
 		icon: <DashboardIcon />,
 	},
 	{
-		label: 'menu_item_income',
-		url: '/income',
-		icon: <AccountBalanceIcon />,
-	},
-	{
 		label: 'menu_item_budget',
 		url: '/budgets',
 		icon: <AccountBalanceWalletIcon />,
@@ -45,6 +41,16 @@ const menuItems = [
 		label: 'menu_item_category',
 		url: '/category',
 		icon: <CategoryIcon />,
+	},
+	{
+		label: 'menu_item_income',
+		url: '/income',
+		icon: <AccountBalanceIcon />,
+	},
+	{
+		label: 'menu_item_transactions',
+		url: '/transactions',
+		icon: <ReceiptLongIcon />,
 	},
 ]
 

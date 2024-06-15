@@ -13,10 +13,11 @@ import { setAuthToken } from './config/axiosInstance'
 import { darkTheme, lightTheme } from './config/theme/theme'
 import { initializeKeycloak } from './feature/auth/authSlice'
 import Budget from './pages/budget'
+import Category from './pages/category'
 import Dashboard from './pages/dashboard'
 import ErrorPage from './pages/errorPage'
 import Income from './pages/income'
-import Category from './pages/category'
+import Transactions from './pages/transactions'
 
 const Authenticated = (props) => {
 	return (
@@ -24,6 +25,7 @@ const Authenticated = (props) => {
 			<Route path='/budgets' element={<Budget />} />
 			<Route path='/income' element={<Income />} />
 			<Route path='/category' element={<Category />} />
+			<Route path='/Transactions' element={<Transactions />} />
 			<Route path='/' element={<Dashboard />} />
 			<Route path='/*' element={<Dashboard />} />
 		</Routes>
