@@ -25,7 +25,7 @@ const Authenticated = (props) => {
 			<Route path='/budgets' element={<Budget />} />
 			<Route path='/income' element={<Income />} />
 			<Route path='/category' element={<Category />} />
-			<Route path='/Transactions' element={<Transactions />} />
+			<Route path='/transactions' element={<Transactions />} />
 			<Route path='/' element={<Dashboard />} />
 			<Route path='/*' element={<Dashboard />} />
 		</Routes>
