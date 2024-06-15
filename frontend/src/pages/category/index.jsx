@@ -8,7 +8,6 @@ import {
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import axiosInstance from '../../config/axiosInstance'
 import {
 	setCategories,
 	setParentCategories,
@@ -16,6 +15,7 @@ import {
 import { setButtonLoading } from '../../feature/loading/loadingSlice'
 import { setCallSnackbar } from '../../feature/snackbar/snackbarSlice'
 import useDictionary from '../../hooks/useDictionary'
+import { makeRequest } from '../../utils/resquestTemplate'
 import { DisplayParentCategories } from './components/displayParentCategories'
 import { DisplaySubCategories } from './components/displaySubCategories'
 
@@ -28,30 +28,18 @@ const Category = () => {
 	const dispatch = useDispatch()
 	const { buttonLoading } = useSelector((state) => state.loading)
 
-	const getSubCategories = async (props) => {
-		try {
-			const response = await axiosInstance.get(
-				`/api/category/parent/${selected.item._id}`,
-			)
-			dispatch(setCategories(response.data))
-			return true
-		} catch (e) {
-			dispatch(
-				setCallSnackbar({
-					severity: 'error',
-					message: e.response.data.error || e.response.statusText,
-				}),
-			)
-			console.log(e)
-		}
-	}
-
 	useEffect(() => {
-		const getParentCategories = async () => {
-			const response = await axiosInstance.get('/api/parent-categories')
+		const handleResponse = (response) => {
 			dispatch(setParentCategories(response.data))
 		}
-		getParentCategories()
+
+		makeRequest({
+			dispatch,
+			handleResponse,
+			method: 'get',
+			url: `/api/parent-categories`,
+			timer: 0,
+		})
 	}, [])
 
 	useEffect(() => {
@@ -60,38 +48,43 @@ const Category = () => {
 		}
 	}, [selected])
 
-	const handleAddCategory = (e) => {
-		const addCategory = async () => {
-			try {
-				const response = await axiosInstance.post('/api/category', {
-					title: newCategory,
-					parentCategoryId: selected.item._id,
-				})
-				if (response.status === 200) {
-					dispatch(setButtonLoading(false))
-					getSubCategories()
-					dispatch(
-						setCallSnackbar({
-							severity: 'success',
-							message: `Category: ${newCategory} created with success!`,
-						}),
-					)
-				}
-			} catch (e) {
-				console.log(e)
-				dispatch(setButtonLoading(false))
-				dispatch(
-					setCallSnackbar({
-						severity: 'error',
-						message: 'You must select a Category first!',
-					}),
-				)
-			}
+	const getSubCategories = () => {
+		const handleResponse = (response) => {
+			dispatch(setCategories(response.data))
 		}
-		dispatch(setButtonLoading(true))
-		setTimeout(() => {
-			addCategory()
-		}, 2000)
+
+		makeRequest({
+			dispatch,
+			handleResponse,
+			method: 'get',
+			url: `/api/category/parent/${selected.item._id}`,
+			timer: 0,
+		})
+	}
+
+	const handleAddCategory = () => {
+		const handleResponse = () => {
+			dispatch(setButtonLoading(false))
+			getSubCategories()
+			dispatch(
+				setCallSnackbar({
+					severity: 'success',
+					message: `Category: ${newCategory} created with success!`,
+				}),
+			)
+		}
+
+		makeRequest({
+			dispatch,
+			handleResponse,
+			loadingAction: setButtonLoading,
+			method: 'post',
+			url: `/api/category`,
+			data: {
+				title: newCategory,
+				parentCategoryId: selected.item._id,
+			},
+		})
 	}
 
 	return (

@@ -2,9 +2,9 @@ import axiosInstance from '../config/axiosInstance'
 import { setCallSnackbar } from '../feature/snackbar/snackbarSlice'
 
 export const makeRequest = (props) => {
-	const { dispatch, method, url, params, data, handleResponse, loadingAction } =
+	const { dispatch, method, url, params, data, handleResponse, loadingAction, timer = 1000 } =
 		props
-	dispatch(loadingAction(true))
+	loadingAction && dispatch(loadingAction(true))
 
 	const config = {
 		method: method,
@@ -14,16 +14,16 @@ export const makeRequest = (props) => {
 	}
 
 	try {
-        // time out is here so its possible to see the loading feature working can be removed!
+		// time out is here so its possible to see the loading feature working can be removed!
 		setTimeout(() => {
 			axiosInstance(config).then((response) => {
 				handleResponse(response)
-				dispatch(loadingAction(false))
+				loadingAction && dispatch(loadingAction(false))
 			})
-		}, 1000)
+		}, timer)
 	} catch (e) {
 		console.log(e)
-		dispatch(loadingAction(false))
+		loadingAction && dispatch(loadingAction(false))
 		dispatch(
 			setCallSnackbar({
 				severity: 'error',
