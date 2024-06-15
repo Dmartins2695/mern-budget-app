@@ -33,7 +33,11 @@ const Authenticated = (props) => {
 }
 
 const App = () => {
-	const [isDarkMode, setIsDarkMode] = useState(false)
+	const themeColor =
+		JSON.stringify(localStorage.getItem('lightMode')) !== JSON.stringify(null)
+			? JSON.stringify(localStorage.getItem('lightMode'))
+			: false
+	const [isLightMode, setIsLightMode] = useState(themeColor)
 	const isRun = useRef(false)
 	const dispatch = useDispatch()
 	const { isLogin, token } = useSelector((state) => state.auth)
@@ -48,12 +52,15 @@ const App = () => {
 	}, [token])
 
 	return (
-		<ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+		<ThemeProvider theme={isLightMode ? darkTheme : lightTheme}>
 			<CssBaseline />
 			<Router>
 				<div className='App'>
 					<Routes>
-						<Route element={<Layout setIsDarkMode={setIsDarkMode} />}>
+						<Route
+							element={
+								<Layout isLightMode={isLightMode} setIsLightMode={setIsLightMode} />
+							}>
 							<Route
 								path='*'
 								element={
