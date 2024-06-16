@@ -34,10 +34,12 @@ const Authenticated = (props) => {
 
 const App = () => {
 	const themeColor =
-		JSON.stringify(localStorage.getItem('lightMode')) !== JSON.stringify(null)
-			? JSON.stringify(localStorage.getItem('lightMode'))
-			: false
-	const [isLightMode, setIsLightMode] = useState(themeColor)
+		localStorage.getItem('lightMode') === 'true' ||
+		localStorage.getItem('lightMode') === 'false'
+			? localStorage.getItem('lightMode')
+			: true
+	const [isLightMode, setIsLightMode] = useState(String(themeColor) == 'true')
+
 	const isRun = useRef(false)
 	const dispatch = useDispatch()
 	const { isLogin, token } = useSelector((state) => state.auth)
@@ -50,6 +52,10 @@ const App = () => {
 	useEffect(() => {
 		setAuthToken(token)
 	}, [token])
+
+	useEffect(() => {
+		localStorage.setItem('lightMode', JSON.stringify(isLightMode))
+	}, [isLightMode])
 
 	return (
 		<ThemeProvider theme={isLightMode ? darkTheme : lightTheme}>

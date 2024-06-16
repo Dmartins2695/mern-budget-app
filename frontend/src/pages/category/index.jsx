@@ -1,28 +1,24 @@
+import AddIcon from '@mui/icons-material/Add'
 import LoadingButton from '@mui/lab/LoadingButton'
-import {
-	CircularProgress,
-	Grid,
-	Paper,
-	TextField,
-	Typography,
-} from '@mui/material'
+import { Grid, Paper, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-	setCategories,
-	setParentCategories,
-} from '../../feature/data/categorySlice'
 import { setButtonLoading } from '../../feature/loading/loadingSlice'
 import { setCallSnackbar } from '../../feature/snackbar/snackbarSlice'
 import useDictionary from '../../hooks/useDictionary'
 import { makeRequest } from '../../utils/resquestTemplate'
 import { DisplayParentCategories } from './components/displayParentCategories'
 import { DisplaySubCategories } from './components/displaySubCategories'
-import AddIcon from '@mui/icons-material/Add'
+import { getParentCategories, getSubCategories } from './functions'
+
+const overflowStyle = {
+	overflow: 'auto',
+	msOverflowStyle: 'none',
+	scrollbarWidth: 'none',
+}
 
 const Category = () => {
-	const { parentCategories } = useSelector((state) => state.category)
-	const { categories } = useSelector((state) => state.category)
+	const { parentCategories, categories } = useSelector((state) => state.category)
 	const [selected, setSelected] = useState(null)
 	const [newCategory, setNewCategory] = useState('')
 	const { labelIn } = useDictionary()
@@ -30,43 +26,19 @@ const Category = () => {
 	const { buttonLoading } = useSelector((state) => state.loading)
 
 	useEffect(() => {
-		const handleResponse = (response) => {
-			dispatch(setParentCategories(response.data))
-		}
-
-		makeRequest({
-			dispatch,
-			handleResponse,
-			method: 'get',
-			url: `/api/parent-categories`,
-			timer: 0,
-		})
+		getParentCategories(dispatch)
 	}, [])
 
 	useEffect(() => {
 		if (selected) {
-			getSubCategories()
+			getSubCategories(dispatch, selected)
 		}
 	}, [selected])
-
-	const getSubCategories = () => {
-		const handleResponse = (response) => {
-			dispatch(setCategories(response.data))
-		}
-
-		makeRequest({
-			dispatch,
-			handleResponse,
-			method: 'get',
-			url: `/api/category/parent/${selected.item._id}`,
-			timer: 0,
-		})
-	}
 
 	const handleAddCategory = () => {
 		const handleResponse = () => {
 			dispatch(setButtonLoading(false))
-			getSubCategories()
+			getSubCategories(dispatch, selected)
 			dispatch(
 				setCallSnackbar({
 					severity: 'success',
@@ -93,30 +65,26 @@ const Category = () => {
 			<Paper sx={{ padding: 5, margin: 5 }}>
 				<Typography variant='h5'>{labelIn('general_categories')}</Typography>
 				<Grid container spacing={2}>
-					<Grid item xs={3}>
-						{parentCategories.map((item, index) => {
-							return (
-								<DisplayParentCategories
-									key={`${item.title}-${index}`}
-									item={item}
-									index={index}
-									selected={selected}
-									setSelected={setSelected}
-								/>
-							)
-						})}
+					<Grid
+						item
+						xs={3}
+						style={{ padding: 0 }}
+						sx={{ ...overflowStyle, height: '64vh', marginTop: 3, marginLeft: 2 }}>
+						<DisplayParentCategories
+							parentCategories={parentCategories}
+							selected={selected}
+							setSelected={setSelected}
+						/>
 					</Grid>
-					<Grid item xs={3}>
+					<Grid item xs={3} style={{ padding: 0 }}>
 						<Typography variant='h6'>{labelIn('categories')}</Typography>
-						{categories.map((item, index) => {
-							return (
-								<DisplaySubCategories
-									key={`${item.title}-${index}`}
-									item={item}
-									getSubCategories={getSubCategories}
-								/>
-							)
-						})}
+						<Grid
+							sx={{ ...overflowStyle, height: '64vh', marginTop: 0, marginLeft: 2 }}>
+							<DisplaySubCategories
+								categories={categories}
+								getSubCategories={() => getSubCategories(dispatch, selected)}
+							/>
+						</Grid>
 					</Grid>
 					<Grid item xs={4} sx={{ paddingLeft: 5, marginLeft: 5 }}>
 						<Typography variant='h6'>

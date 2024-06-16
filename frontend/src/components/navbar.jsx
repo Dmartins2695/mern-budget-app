@@ -39,7 +39,6 @@ const Navbar = (props) => {
 	const { isLogin } = useSelector((state) => state.auth)
 
 	const handleThemeMode = (e) => {
-		localStorage.setItem('lightMode', JSON.stringify(isLightMode))
 		setIsLightMode((prev) => !prev)
 	}
 
@@ -82,7 +81,7 @@ const Navbar = (props) => {
 					</Grid>
 					<Grid item>
 						<Switch
-							checked={Boolean(isLightMode)}
+							checked={isLightMode}
 							color={'inherit'}
 							onClick={handleThemeMode}
 							icon={<LightModeIcon />}

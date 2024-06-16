@@ -1,16 +1,17 @@
 import Box from '@mui/material/Box'
 import * as React from 'react'
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Outlet, useNavigate } from 'react-router-dom'
 import Navbar from './navbar'
 import SideMenu from './sideMenu'
+import { clearReducers } from '../utils/stateControlFunctions'
 
 const Layout = (props) => {
 	const [open, setOpen] = useState(false)
 	const navigate = useNavigate()
 	const [selectedIndex, setSelectedIndex] = useState(null)
-
+	const dispatch = useDispatch()
 	const { isLogin } = useSelector((state) => state.auth)
 
 	const handleDrawerOpen = () => {
@@ -23,6 +24,7 @@ const Layout = (props) => {
 
 	const handleListItemClick = (e, index, url) => {
 		setSelectedIndex(index)
+		clearReducers(dispatch)
 		navigate(url)
 	}
 
