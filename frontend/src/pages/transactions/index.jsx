@@ -274,6 +274,7 @@ const Transactions = () => {
 								variant='h5'
 								sx={{ mb: 2 }}>{`"${selectedIncome?.title}" Transactions`}</Typography>
 							<Paper sx={{ pl: 3, pr: 3, pt: 3 }}>
+								{/* create a table view for this, with filters possibly */}
 								<DisplayTransactions selectedIncome={selectedIncome} />
 							</Paper>
 						</>
