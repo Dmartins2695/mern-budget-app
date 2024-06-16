@@ -31,7 +31,8 @@ export const makeRequest = (props) => {
 				dispatch(
 					setCallSnackbar({
 						severity: 'error',
-						message: e.response.data.error || e.response.statusText,
+						message:
+							e?.response?.data?.error || e.response?.statusText || 'Unknown Error!',
 					}),
 				)
 			})

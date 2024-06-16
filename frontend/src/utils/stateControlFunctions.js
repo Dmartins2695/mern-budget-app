@@ -1,12 +1,13 @@
 import { setInitialStateCategories } from '../feature/data/categorySlice'
 import { setInitialStateIncomes } from '../feature/data/incomeSlice'
+import { setInitialStateTransaction } from '../feature/data/transactionsSlice'
 import { setInitialStateLoading } from '../feature/loading/loadingSlice'
 
 export const clearReducers = (dispatch) => {
 	dispatch(setInitialStateCategories())
 	dispatch(setInitialStateIncomes())
 	dispatch(setInitialStateLoading())
-	console.log('here')
+	dispatch(setInitialStateTransaction())
 }
 
 export const handleStateChange = (e, func) => {
