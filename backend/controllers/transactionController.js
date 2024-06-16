@@ -26,7 +26,10 @@ const getTransactionByIncomeId = async (req, res) => {
 		return res.status(404).json({ error: 'Invalid Id' })
 	}
 	try {
-		const data = await Transaction.find({ incomeId: id, userId: req.user.id })
+		const data = await Transaction.find({
+			incomeId: id,
+			userId: req.user.id,
+		}).populate('categoryId')
 
 		if (!data) {
 			return res.status(404).json({ error: `Income with id:${id} not Found!` })

@@ -6,6 +6,7 @@ import {
 	CardContent,
 	CardHeader,
 	Grid,
+	Paper,
 	TextField,
 	Typography,
 } from '@mui/material'
@@ -18,7 +19,7 @@ import { transformDataFOrDroplist } from '../../utils/dataTransformation'
 import { makeRequest } from '../../utils/resquestTemplate'
 import { handleStateChange } from '../../utils/stateControlFunctions'
 import { getParentCategories, getSubCategories } from '../category/functions'
-import { setTransaction } from '../../feature/data/transactionsSlice'
+import { getTransactions } from './functions'
 
 const NewTransaction = (props) => {
 	const { selectedIncome, setOpenAdd } = props
@@ -55,11 +56,9 @@ const NewTransaction = (props) => {
 		setParentId(newValue._id)
 	}
 
-	const getTransactions = () => {}
-
 	const addTransaction = () => {
 		const handleResponse = (response) => {
-			getTransactions()
+			getTransactions(dispatch, selectedIncome)
 			dispatch(
 				setCallSnackbar({
 					severity: 'success',
@@ -73,7 +72,7 @@ const NewTransaction = (props) => {
 			dispatch,
 			handleResponse,
 			method: 'post',
-			url: '/api/transaction',
+			url: '/api/transactions',
 			data: newTransaction,
 		})
 	}
@@ -155,41 +154,43 @@ const NewTransaction = (props) => {
 const DisplayTransactions = (props) => {
 	const { selectedIncome } = props
 	const dispatch = useDispatch()
-	const { labelIn } = useDictionary()
 	const { transactions } = useSelector((state) => state.transactions)
 
 	useEffect(() => {
 		if (selectedIncome !== null) {
-			const handleResponse = (response) => {
-				dispatch(setTransaction(response.data))
-			}
-
-			makeRequest({
-				dispatch,
-				handleResponse,
-				method: 'get',
-				url: `api/transactions/income/${selectedIncome._id}`,
-				timer: 0,
-			})
+			getTransactions(dispatch, selectedIncome)
 		}
 	}, [selectedIncome])
 
 	return (
-		<>
+		<Grid
+			sx={{
+				overflow: 'auto',
+				msOverflowStyle: 'none',
+				scrollbarWidth: 'none',
+				height: '70vh',
+			}}>
 			{transactions.map((item, index) => {
+				console.log(item)
 				return (
-					<Card key={`${index}-${item.title}`}>
-						<CardHeader title={item.title} />
+					<Card
+						key={`${index}-${item.title}`}
+						elevation={0}
+						sx={(theme) => ({
+							mb: 2,
+							background: theme.palette.background.default,
+						})}>
+						<CardHeader title={item.title} subheader={item.categoryId.title} />
 						<CardContent>
 							<Grid container justifyContent={'space-between'}>
 								<Typography>{item.description}</Typography>
-								<Typography>{item.amount}</Typography>
+								<Typography color='error'>-{item.amount}</Typography>
 							</Grid>
 						</CardContent>
 					</Card>
 				)
 			})}
-		</>
+		</Grid>
 	)
 }
 
@@ -264,8 +265,19 @@ const Transactions = () => {
 						overflow: 'auto',
 						msOverflowStyle: 'none',
 						scrollbarWidth: 'none',
+						pb: 1,
+						ml: 2,
 					}}>
-					<DisplayTransactions selectedIncome={selectedIncome} />
+					{selectedIncome && (
+						<>
+							<Typography
+								variant='h5'
+								sx={{ mb: 2 }}>{`"${selectedIncome?.title}" Transactions`}</Typography>
+							<Paper sx={{ pl: 3, pr: 3, pt: 3 }}>
+								<DisplayTransactions selectedIncome={selectedIncome} />
+							</Paper>
+						</>
+					)}
 				</Grid>
 			</Grid>
 		</div>

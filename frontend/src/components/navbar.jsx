@@ -95,11 +95,11 @@ const Navbar = (props) => {
 						/>
 						{/*notifications*/}
 						{isLogin ? (
-							<Button color={'inherit'} variant='text' onClick={logout}>
+							<Button color={'inherit'} variant='text' onClick={logout} size='small'>
 								{labelIn('logout_button')}
 							</Button>
 						) : (
-							<Button color={'inherit'} variant='outlined' onClick={login}>
+							<Button color={'inherit'} variant='text' onClick={login} size='small'>
 								{labelIn('login_button')}
 							</Button>
 						)}

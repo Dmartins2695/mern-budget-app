@@ -24,10 +24,12 @@ export const makeRequest = (props) => {
 		// time out is here so its possible to see the loading feature working can be removed!
 		axiosInstance(config)
 			.then((response) => {
+				console.log('here')
 				handleResponse(response)
 				loadingAction && dispatch(loadingAction(false))
 			})
 			.catch((e) => {
+				console.log(e)
 				dispatch(
 					setCallSnackbar({
 						severity: 'error',
