@@ -63,24 +63,21 @@ const Income = () => {
 							</Typography>
 							{/* Add and close Icon */}
 							<IconButton onClick={handleAddIncome}>
-								{open ? <CloseIcon /> : <AddIcon />}
+								<AddIcon />
 							</IconButton>
 						</Grid>
 						{/* Add new Income component and logic */}
-						{open && <NewIncome getIncomes={getIncomes} />}
+						<NewIncome
+							getIncomes={getIncomes}
+							open={open}
+							handleModal={handleAddIncome}
+						/>
 						{/* Render Income data */}
-						{incomes.map((item, index) => {
-							return (
-								<IncomeDisplayer
-									key={`${item.title}-${index}`}
-									title={item.title}
-									amount={item.amount}
-									index={index}
-									selected={selected}
-									setSelected={setSelected}
-								/>
-							)
-						})}
+						<IncomeDisplayer
+							incomes={incomes}
+							selected={selected}
+							setSelected={setSelected}
+						/>
 						{incomes.length === 0 && (
 							<div
 								style={{
