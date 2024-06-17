@@ -5,7 +5,10 @@ import {
 	Card,
 	CardContent,
 	CardHeader,
+	Dialog,
 	Grid,
+	IconButton,
+	Modal,
 	Paper,
 	TextField,
 	Typography,
@@ -13,6 +16,7 @@ import {
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIncomes } from '../../feature/data/incomeSlice'
+import { DataGrid } from '@mui/x-data-grid'
 import { setCallSnackbar } from '../../feature/snackbar/snackbarSlice'
 import useDictionary from '../../hooks/useDictionary'
 import { transformDataFOrDroplist } from '../../utils/dataTransformation'
@@ -20,9 +24,10 @@ import { makeRequest } from '../../utils/resquestTemplate'
 import { handleStateChange } from '../../utils/stateControlFunctions'
 import { getParentCategories, getSubCategories } from '../category/functions'
 import { getTransactions } from './functions'
+import CloseIcon from '@mui/icons-material/Close'
 
 const NewTransaction = (props) => {
-	const { selectedIncome, setOpenAdd } = props
+	const { selectedIncome, setOpenAdd, openAdd, handleOpen } = props
 	const { labelIn } = useDictionary()
 	const dispatch = useDispatch()
 	const { categories, parentCategories } = useSelector((state) => state.category)
@@ -78,126 +83,130 @@ const NewTransaction = (props) => {
 	}
 
 	return (
-		<Grid container direction={'column'} sx={{ padding: 2 }}>
-			<Typography variant='h5' sx={{ mb: 2 }}>
-				{labelIn('new_transaction')}
-			</Typography>
-			<Autocomplete
-				disablePortal
-				id='combo-box-demo'
-				options={transformDataFOrDroplist(parentCategories)}
-				sx={{ mt: 2, ml: 2 }}
-				onChange={handleChangeParent}
-				isOptionEqualToValue={(option, value) => option._id === value._id}
-				renderInput={(params) => (
-					<TextField {...params} label={labelIn('select_parent_category')} />
-				)}
-				size='small'
-			/>
-			<Autocomplete
-				disablePortal
-				id='combo-box-demo'
-				options={transformDataFOrDroplist(categories)}
-				sx={{ mt: 2, ml: 2 }}
-				onChange={handleChange}
-				isOptionEqualToValue={(option, value) => option._id === value._id}
-				renderInput={(params) => (
-					<TextField {...params} label={labelIn('select_subcategory')} />
-				)}
-				size='small'
-			/>
-			<TextField
-				id='title'
-				variant='standard'
-				value={newTransaction.title}
-				label={labelIn('form_transaction_title')}
-				onChange={(e) => handleStateChange(e, setNewTransaction)}
-				sx={{ mt: 1, ml: 2 }}
-			/>
-			<TextField
-				id='amount'
-				variant='standard'
-				value={newTransaction.amount}
-				label={labelIn('form_transaction_amount')}
-				onChange={(e) => {
-					const value = e.target.value
-					if (/^\d*$/.test(value)) {
-						// Allow only digits
-						handleStateChange(e, setNewTransaction)
-					}
-				}}
-				inputProps={{ inputMode: 'numeric' }}
-				sx={{ mt: 1, ml: 2 }}
-			/>
-			<TextField
-				id='description'
-				variant='standard'
-				value={newTransaction.description}
-				label={labelIn('form_transaction_description')}
-				onChange={(e) => handleStateChange(e, setNewTransaction)}
-				sx={{ mt: 1, ml: 2 }}
-			/>
-			<LoadingButton
-				loading={buttonLoading}
-				variant='contained'
-				onClick={addTransaction}
-				loadingPosition='start'
-				startIcon={<div />}
-				size='small'
-				sx={{ mt: 4, ml: 2 }}>
-				{labelIn('form_button_new_transaction')}
-			</LoadingButton>
-		</Grid>
+		<Dialog
+			open={openAdd}
+			onClose={handleOpen}
+			PaperProps={{
+				sx: {
+					p: 4,
+					pt: 2,
+				},
+			}}
+			maxWidth>
+			<Grid
+				container
+				alignItems={'center'}
+				justifyContent={'space-between'}
+				sx={{ mb: 2 }}>
+				<Typography variant='h6' sx={{ mb: 2 }}>
+					{labelIn('new_transaction')}
+				</Typography>
+				<IconButton onClick={handleOpen}>
+					<CloseIcon />
+				</IconButton>
+			</Grid>
+			<Grid
+				container
+				alignItems={'center'}
+				columnSpacing={2}
+				sx={{ paddingLeft: 2 }}>
+				<Grid item xs={3}>
+					<Autocomplete
+						id='combo-box-demo'
+						options={transformDataFOrDroplist(parentCategories)}
+						onChange={handleChangeParent}
+						isOptionEqualToValue={(option, value) => option._id === value._id}
+						renderInput={(params) => (
+							<TextField {...params} label={labelIn('select_parent_category')} />
+						)}
+						size='small'
+						sx={{
+							'& :hover .MuiAutocomplete-input, & .Mui-focused .MuiAutocomplete-input':
+								{ minWidth: '30px' },
+						}}
+					/>
+				</Grid>
+				<Grid item xs={3}>
+					<Autocomplete
+						id='combo-box-demo'
+						options={transformDataFOrDroplist(categories)}
+						onChange={handleChange}
+						isOptionEqualToValue={(option, value) => option._id === value._id}
+						renderInput={(params) => (
+							<TextField {...params} label={labelIn('select_subcategory')} />
+						)}
+						size='small'
+						sx={{
+							'& :hover .MuiAutocomplete-input, & .Mui-focused .MuiAutocomplete-input':
+								{ minWidth: '30px' },
+						}}
+					/>
+				</Grid>
+				<Grid xs={6} />
+				<Grid item xs={2}>
+					<TextField
+						id='title'
+						variant='standard'
+						value={newTransaction.title}
+						label={labelIn('form_transaction_title')}
+						onChange={(e) => handleStateChange(e, setNewTransaction)}
+					/>
+				</Grid>
+				<Grid item xs={4}>
+					<TextField
+						id='description'
+						variant='standard'
+						value={newTransaction.description}
+						label={labelIn('form_transaction_description')}
+						onChange={(e) => handleStateChange(e, setNewTransaction)}
+						fullWidth
+					/>
+				</Grid>
+				<Grid item xs={3}>
+					<TextField
+						id='amount'
+						variant='standard'
+						value={newTransaction.amount}
+						label={labelIn('form_transaction_amount')}
+						onChange={(e) => {
+							const value = e.target.value
+							if (/^\d*$/.test(value)) {
+								// Allow only digits
+								handleStateChange(e, setNewTransaction)
+							}
+						}}
+						inputProps={{ inputMode: 'numeric' }}
+					/>
+				</Grid>
+				<Grid item xs={3}>
+					<LoadingButton
+						loading={buttonLoading}
+						variant='contained'
+						onClick={addTransaction}
+						loadingPosition='start'
+						startIcon={<div />}
+						size='small'
+						sx={{ mt: 4, ml: 2 }}>
+						{labelIn('form_button_new_transaction')}
+					</LoadingButton>
+				</Grid>
+			</Grid>
+		</Dialog>
 	)
 }
 
-const DisplayTransactions = (props) => {
-	const { selectedIncome } = props
-	const dispatch = useDispatch()
-	const { transactions } = useSelector((state) => state.transactions)
-
-	useEffect(() => {
-		if (selectedIncome !== null) {
-			getTransactions(dispatch, selectedIncome)
-		}
-	}, [selectedIncome])
-
-	return (
-		<Grid
-			sx={{
-				overflow: 'auto',
-				msOverflowStyle: 'none',
-				scrollbarWidth: 'none',
-				height: '70vh',
-			}}>
-			{transactions.map((item, index) => {
-				console.log(item)
-				return (
-					<Card
-						key={`${index}-${item.title}`}
-						elevation={0}
-						sx={(theme) => ({
-							mb: 2,
-							background: theme.palette.background.default,
-						})}>
-						<CardHeader title={item.title} subheader={item.categoryId.title} />
-						<CardContent>
-							<Grid container justifyContent={'space-between'}>
-								<Typography>{item.description}</Typography>
-								<Typography color='error'>-{item.amount}</Typography>
-							</Grid>
-						</CardContent>
-					</Card>
-				)
-			})}
-		</Grid>
-	)
-}
+const headers = [
+	{ field: 'title', headerName: 'Title', flex: 1 },
+	{ field: 'description', headerName: 'Description', flex: 1 },
+	{ field: 'createdAt', headerName: 'Created', flex: 1 },
+	{ field: 'amount', headerName: 'Amount', flex: 1 },
+]
 
 const Transactions = () => {
 	const dispatch = useDispatch()
 	const { labelIn } = useDictionary()
 	const { incomes } = useSelector((state) => state.incomes)
+	const { transactions } = useSelector((state) => state.transactions)
 	const [selectedIncome, setSelectedIncome] = useState(null)
 	const [openAdd, setOpenAdd] = useState(false)
 
@@ -217,6 +226,10 @@ const Transactions = () => {
 		}
 	}, [])
 
+	useEffect(() => {
+		if (selectedIncome) getTransactions(dispatch, selectedIncome)
+	}, [selectedIncome])
+
 	const handleChange = (event, newValue) => {
 		setSelectedIncome(newValue)
 	}
@@ -225,62 +238,62 @@ const Transactions = () => {
 		setOpenAdd((prev) => !prev)
 	}
 
+	const addIdToData = (data) => {
+		if (data) {
+			const newData = []
+			data.forEach((item) => {
+				newData.push({ ...item, id: item._id })
+			})
+			return newData
+		}
+		return []
+	}
+
 	return (
 		<div>
 			<Typography variant='h4'>{labelIn('menu_item_transactions')}</Typography>
-			<Grid container spacing={2} sx={{ pl: 2, pt: 2, pb: 2 }}>
-				<Grid item xs={3}>
-					<Autocomplete
-						disablePortal
-						id='combo-box-demo'
-						options={transformDataFOrDroplist(incomes)}
-						sx={{ m: 2 }}
-						onChange={handleChange}
-						isOptionEqualToValue={(option, value) => option._id === value._id}
-						size='small'
-						renderInput={(params) => (
-							<TextField {...params} label={labelIn('select_incomes')} />
+			<div style={{ padding: 25 }}>
+				<Grid container alignContent={'center'} justifyContent={'space-between'}>
+					<Grid item xs>
+						<Autocomplete
+							disablePortal
+							id='combo-box-demo'
+							options={transformDataFOrDroplist(incomes)}
+							sx={{ m: 2, width: 300 }}
+							onChange={handleChange}
+							isOptionEqualToValue={(option, value) => option._id === value._id}
+							size='small'
+							renderInput={(params) => (
+								<TextField {...params} label={labelIn('select_incomes')} />
+							)}
+						/>
+					</Grid>
+					<Grid
+						container
+						item
+						xs
+						alignContent={'center'}
+						justifyContent={'flex-end'}>
+						{selectedIncome && (
+							<Button
+								sx={{ ml: 2 }}
+								onClick={handleOpen}
+								color={'primary'}
+								variant={'text'}
+								size={'small'}>
+								{labelIn('open_add_transaction')}
+							</Button>
 						)}
-					/>
-					{selectedIncome && (
-						<Button
-							sx={{ ml: 2 }}
-							onClick={handleOpen}
-							color={openAdd ? 'error' : 'primary'}
-							variant={openAdd ? 'outlined' : 'text'}
-							size={'small'}>
-							{openAdd
-								? labelIn('close_add_transaction')
-								: labelIn('open_add_transaction')}
-						</Button>
-					)}
-					{openAdd && (
-						<NewTransaction selectedIncome={selectedIncome} setOpenAdd={setOpenAdd} />
-					)}
+					</Grid>
 				</Grid>
-				<Grid
-					item
-					xs={4}
-					sx={{
-						overflow: 'auto',
-						msOverflowStyle: 'none',
-						scrollbarWidth: 'none',
-						pb: 1,
-						ml: 2,
-					}}>
-					{selectedIncome && (
-						<>
-							<Typography
-								variant='h5'
-								sx={{ mb: 2 }}>{`"${selectedIncome?.title}" Transactions`}</Typography>
-							<Paper sx={{ pl: 3, pr: 3, pt: 3 }}>
-								{/* create a table view for this, with filters possibly */}
-								<DisplayTransactions selectedIncome={selectedIncome} />
-							</Paper>
-						</>
-					)}
-				</Grid>
-			</Grid>
+				<NewTransaction
+					selectedIncome={selectedIncome}
+					setOpenAdd={setOpenAdd}
+					handleOpen={handleOpen}
+					openAdd={openAdd}
+				/>
+				<DataGrid columns={headers} rows={addIdToData(transactions)} autoHeight />
+			</div>
 		</div>
 	)
 }
