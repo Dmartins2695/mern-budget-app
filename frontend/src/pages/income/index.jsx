@@ -10,6 +10,7 @@ import { makeRequest } from '../../utils/resquestTemplate'
 import { IncomeDisplayer } from './components/incomeDisplayer'
 import { NewIncome } from './components/newIncome'
 
+
 const Item = styled(Paper)(({ theme, width, height }) => ({
 	padding: 25,
 	width: width,
@@ -28,6 +29,7 @@ const Income = () => {
 	const getIncomes = async () => {
 		const handleResponse = (response) => {
 			dispatch(setIncomes(response.data))
+
 		}
 
 		makeRequest({
@@ -38,6 +40,7 @@ const Income = () => {
 			timer: 0,
 		})
 	}
+
 
 	useEffect(() => {
 		getIncomes()

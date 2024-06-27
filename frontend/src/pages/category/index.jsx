@@ -108,6 +108,7 @@ const Category = () => {
 								sx={{ mt: 2 }}
 								loadingPosition='start'
 								startIcon={<AddIcon />}>
+
 								{labelIn('category_button_add')}
 							</LoadingButton>
 						</Grid>
