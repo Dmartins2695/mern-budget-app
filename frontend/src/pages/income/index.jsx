@@ -1,27 +1,15 @@
 import { useTheme } from '@emotion/react'
 import AddIcon from '@mui/icons-material/Add'
 import CloseIcon from '@mui/icons-material/Close'
-import {
-	Accordion,
-	AccordionDetails,
-	AccordionSummary,
-	Box,
-	Button,
-	Grid,
-	IconButton,
-	Paper,
-	TextField,
-	Typography,
-	styled,
-} from '@mui/material'
+import { Box, Grid, IconButton, Paper, Typography, styled } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import axiosInstance from '../../config/axiosInstance'
-import { handleStateChange } from '../../utils/stateControlFunctions'
-import useDictionary from '../../hooks/useDictionary'
-import { highlightSelected } from '../../utils/styleFunctions'
-import { setIncomes } from '../../feature/data/incomeSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCallSnackbar } from '../../feature/snackbar/snackbarSlice'
+import { setIncomes } from '../../feature/data/incomeSlice'
+import useDictionary from '../../hooks/useDictionary'
+import { makeRequest } from '../../utils/resquestTemplate'
+import { IncomeDisplayer } from './components/incomeDisplayer'
+import { NewIncome } from './components/newIncome'
+
 
 const Item = styled(Paper)(({ theme, width, height }) => ({
 	padding: 25,
@@ -29,137 +17,6 @@ const Item = styled(Paper)(({ theme, width, height }) => ({
 	height: height,
 	marginLeft: 3,
 }))
-
-const IncomeDisplayer = ({ title, amount, index, selected, setSelected }) => {
-	const theme = useTheme()
-
-	return (
-		<div style={{ marginBottom: 10 }}>
-			{title && amount && (
-				<Accordion
-					disableGutters
-					elevation={0}
-					sx={{
-						borderRadius: '5px',
-						position: 'unset',
-						border: `1px solid ${theme.palette.primary.main + '12'}`,
-						background: theme.palette.background.default + '61',
-					}}>
-					<AccordionSummary
-						sx={{
-							borderRadius: '5px',
-							backgroundColor: highlightSelected(selected, index, theme, 'contrast'),
-						}}
-						onClick={() => setSelected(index)}>
-						<Grid container alignItems='center' justifyContent='space-between'>
-							<Typography variant='body1' display='inline'>
-								{title}
-							</Typography>
-							<Typography variant='body2' display='inline'>
-								{amount}
-							</Typography>
-						</Grid>
-					</AccordionSummary>
-					<AccordionDetails>
-						{/* budgets basic info maybe make loop for data*/}
-						{/* Missing create api to grab incomes with basic info of budgets */}
-						<Grid container alignItems='center' justifyContent='space-between'>
-							<Typography variant='body1' display='inline'>
-								{/* replace with data variable */} Missing
-							</Typography>
-							<Typography variant='body2' display='inline'>
-								{/* replace with data variable */} data
-							</Typography>
-						</Grid>
-					</AccordionDetails>
-				</Accordion>
-			)}
-		</div>
-	)
-}
-
-const NewIncome = (props) => {
-	const { getIncomes } = props
-	const theme = useTheme()
-	const { labelIn } = useDictionary()
-	const dispatch = useDispatch()
-	const [newIncomeObject, setNewIncomeObject] = useState({
-		title: '',
-		amount: '',
-	})
-
-	const handleAddIncome = () => {
-		const addIncome = async () => {
-			const response = await axiosInstance.post('/api/income', newIncomeObject)
-			if (response.status === 200) {
-				getIncomes()
-				dispatch(
-					setCallSnackbar({
-						severity: 'success',
-						message: labelIn('created_new_income'),
-					}),
-				)
-			}
-		}
-
-		addIncome()
-	}
-
-	return (
-		<Grid
-			container
-			direction='column'
-			alignItems='flex-start'
-			justifyContent='center'
-			sx={{
-				border: `1px solid ${theme.palette.primary.main + '12'}`,
-				background: theme.palette.background.default + '61',
-				p: 2,
-				borderRadius: '5px',
-				mb: 2,
-			}}>
-			<Typography variant='body1' sx={{ mb: 1 }}>
-				{labelIn('new_income')}
-			</Typography>
-			<Grid container justifyContent={'space-between'} alignItems='center'>
-				<Grid item>
-					<TextField
-						id='title'
-						variant='standard'
-						value={newIncomeObject.title}
-						label={labelIn('new_income_title')}
-						onChange={(e) => handleStateChange(e, setNewIncomeObject)}
-					/>
-				</Grid>
-				<Grid item>
-					<TextField
-						id='amount'
-						variant='standard'
-						value={newIncomeObject.amount}
-						label={labelIn('new_income_amount')}
-						onChange={(e) => {
-							const value = e.target.value
-							if (/^\d*$/.test(value)) {
-								// Allow only digits
-								handleStateChange(e, setNewIncomeObject)
-							}
-						}}
-						inputProps={{ inputMode: 'numeric' }}
-					/>
-				</Grid>
-			</Grid>
-			<Grid container justifyContent='flex-end'>
-				<Button
-					variant='contained'
-					onClick={handleAddIncome}
-					size='small'
-					sx={{ mt: 2 }}>
-					{labelIn('income_button_add')}
-				</Button>
-			</Grid>
-		</Grid>
-	)
-}
 
 const Income = () => {
 	const { incomes } = useSelector((state) => state.incomes)
@@ -170,18 +27,20 @@ const Income = () => {
 	const [selected, setSelected] = useState(null)
 
 	const getIncomes = async () => {
-		try {
-			const response = await axiosInstance.get('/api/income')
+		const handleResponse = (response) => {
 			dispatch(setIncomes(response.data))
-		} catch (e) {
-			dispatch(
-				setCallSnackbar({
-					severity: 'error',
-					message: labelIn('failed_fetch_incomes'),
-				}),
-			)
+
 		}
+
+		makeRequest({
+			dispatch,
+			handleResponse,
+			method: 'get',
+			url: '/api/income',
+			timer: 0,
+		})
 	}
+
 
 	useEffect(() => {
 		getIncomes()
@@ -207,24 +66,21 @@ const Income = () => {
 							</Typography>
 							{/* Add and close Icon */}
 							<IconButton onClick={handleAddIncome}>
-								{open ? <CloseIcon /> : <AddIcon />}
+								<AddIcon />
 							</IconButton>
 						</Grid>
 						{/* Add new Income component and logic */}
-						{open && <NewIncome getIncomes={getIncomes} />}
+						<NewIncome
+							getIncomes={getIncomes}
+							open={open}
+							handleModal={handleAddIncome}
+						/>
 						{/* Render Income data */}
-						{incomes.map((item, index) => {
-							return (
-								<IncomeDisplayer
-									key={`${item.title}-${index}`}
-									title={item.title}
-									amount={item.amount}
-									index={index}
-									selected={selected}
-									setSelected={setSelected}
-								/>
-							)
-						})}
+						<IncomeDisplayer
+							incomes={incomes}
+							selected={selected}
+							setSelected={setSelected}
+						/>
 						{incomes.length === 0 && (
 							<div
 								style={{

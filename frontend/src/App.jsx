@@ -13,10 +13,11 @@ import { setAuthToken } from './config/axiosInstance'
 import { darkTheme, lightTheme } from './config/theme/theme'
 import { initializeKeycloak } from './feature/auth/authSlice'
 import Budget from './pages/budget'
+import Category from './pages/category'
 import Dashboard from './pages/dashboard'
 import ErrorPage from './pages/errorPage'
 import Income from './pages/income'
-import Category from './pages/category'
+import Transactions from './pages/transactions'
 
 const Authenticated = (props) => {
 	return (
@@ -24,6 +25,7 @@ const Authenticated = (props) => {
 			<Route path='/budgets' element={<Budget />} />
 			<Route path='/income' element={<Income />} />
 			<Route path='/category' element={<Category />} />
+			<Route path='/transactions' element={<Transactions />} />
 			<Route path='/' element={<Dashboard />} />
 			<Route path='/*' element={<Dashboard />} />
 		</Routes>
@@ -31,7 +33,13 @@ const Authenticated = (props) => {
 }
 
 const App = () => {
-	const [isDarkMode, setIsDarkMode] = useState(false)
+	const themeColor =
+		localStorage.getItem('lightMode') === 'true' ||
+		localStorage.getItem('lightMode') === 'false'
+			? localStorage.getItem('lightMode')
+			: true
+	const [isLightMode, setIsLightMode] = useState(String(themeColor) == 'true')
+
 	const isRun = useRef(false)
 	const dispatch = useDispatch()
 	const { isLogin, token } = useSelector((state) => state.auth)
@@ -45,13 +53,20 @@ const App = () => {
 		setAuthToken(token)
 	}, [token])
 
+	useEffect(() => {
+		localStorage.setItem('lightMode', JSON.stringify(isLightMode))
+	}, [isLightMode])
+
 	return (
-		<ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+		<ThemeProvider theme={isLightMode ? darkTheme : lightTheme}>
 			<CssBaseline />
 			<Router>
 				<div className='App'>
 					<Routes>
-						<Route element={<Layout setIsDarkMode={setIsDarkMode} />}>
+						<Route
+							element={
+								<Layout isLightMode={isLightMode} setIsLightMode={setIsLightMode} />
+							}>
 							<Route
 								path='*'
 								element={

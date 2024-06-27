@@ -1,229 +1,63 @@
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import AddIcon from '@mui/icons-material/Add'
 import LoadingButton from '@mui/lab/LoadingButton'
-import {
-	Button,
-	CircularProgress,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogContentText,
-	DialogTitle,
-	Grid,
-	Paper,
-	TextField,
-	Typography,
-} from '@mui/material'
+import { Grid, Paper, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import axiosInstance from '../../config/axiosInstance'
-import {
-	setButtonLoading,
-	setModalButtonLoading,
-	setModalLoading,
-} from '../../feature/loading/loadingSlice'
-import useDictionary from '../../hooks/useDictionary'
-import { highlightSelected } from '../../utils/styleFunctions'
+import { setButtonLoading } from '../../feature/loading/loadingSlice'
 import { setCallSnackbar } from '../../feature/snackbar/snackbarSlice'
-import {
-	setCategories,
-	setParentCategories,
-} from '../../feature/data/categorySlice'
+import useDictionary from '../../hooks/useDictionary'
+import { makeRequest } from '../../utils/resquestTemplate'
+import { DisplayParentCategories } from './components/displayParentCategories'
+import { DisplaySubCategories } from './components/displaySubCategories'
+import { getParentCategories, getSubCategories } from './functions'
 
-const DisplayParentCategories = (props) => {
-	const { item, index, selected, setSelected } = props
-
-	return (
-		<div>
-			<Paper
-				sx={(theme) => ({
-					margin: 2,
-					padding: 1,
-					paddingLeft: 3,
-					background: highlightSelected(selected?.index, index, theme, 'default'),
-				})}
-				onClick={() => setSelected({ index, item })}>
-				<Typography>{item.title}</Typography>
-			</Paper>
-		</div>
-	)
-}
-
-const DisplaySubCategories = (props) => {
-	const { item, getSubCategories } = props
-	const [openModal, setOpenModal] = useState(false)
-	const dispatch = useDispatch()
-	const { modalButtonLoading } = useSelector((state) => state.loading)
-	const { labelIn } = useDictionary()
-
-	const handleOpenModalState = () => {
-		setOpenModal((prev) => !prev)
-	}
-
-	const handleDeleteCategory = () => {
-		const deleteCategory = async () => {
-			try {
-				const response = await axiosInstance.delete(`/api/category/${item._id}`)
-				if (response.status === 200) {
-					getSubCategories()
-					dispatch(setModalLoading(false))
-					handleOpenModalState()
-				} else {
-					dispatch(
-						setCallSnackbar({ severity: 'error', message: response.data.error }),
-					)
-				}
-			} catch (e) {
-				console.log(e)
-				dispatch(setModalButtonLoading(false))
-				dispatch(
-					setCallSnackbar({
-						severity: 'error',
-						message: e.response.data.error || e.response.statusText,
-					}),
-				)
-			}
-		}
-		dispatch(setModalButtonLoading(true))
-		setTimeout(() => {
-			deleteCategory()
-		}, 2000)
-	}
-
-	return (
-		<div>
-			<Grid container justifyContent={'flex-start'} alignItems={'center'}>
-				<Paper
-					elevation={0}
-					sx={(theme) => ({
-						marginTop: 1,
-						padding: 1,
-						paddingLeft: 3,
-						background: theme.palette.background.default,
-						width: 'inherit',
-					})}>
-					<Grid container justifyContent={'space-between'} alignItems={'center'}>
-						<Typography variant='body1'>{item.title}</Typography>
-						<DeleteOutlineIcon
-							sx={{ cursor: 'pointer' }}
-							color='error'
-							fontSize='sm'
-							onClick={handleOpenModalState} // open modal to confirm delete of category
-						/>
-					</Grid>
-				</Paper>
-				<Dialog
-					open={openModal}
-					onClose={handleOpenModalState}
-					PaperProps={{
-						sx: {
-							p: 2,
-						},
-					}}>
-					<DialogTitle id='alert-dialog-title'>
-						{labelIn('delete_category_modal')}
-					</DialogTitle>
-					<DialogContent>
-						<DialogContentText id='alert-dialog-description'>
-							{labelIn('delete_category_confirm_text')}
-						</DialogContentText>
-					</DialogContent>
-					<DialogActions>
-						<Button
-							onClick={handleOpenModalState}
-							variant='outlined'
-							color='secondary'
-							size={'small'}>
-							{labelIn('delete_category_modal_cancel')}
-						</Button>
-						<LoadingButton
-							loading={modalButtonLoading}
-							onClick={handleDeleteCategory}
-							loadingPosition='start'
-							variant='contained'
-							color='error'
-							size={'small'}>
-							{labelIn('delete_category_modal_confirm')}
-						</LoadingButton>
-					</DialogActions>
-				</Dialog>
-			</Grid>
-		</div>
-	)
+const overflowStyle = {
+	overflow: 'auto',
+	msOverflowStyle: 'none',
+	scrollbarWidth: 'none',
 }
 
 const Category = () => {
-	const { parentCategories } = useSelector((state) => state.category)
-	const { categories } = useSelector((state) => state.category)
+	const { parentCategories, categories } = useSelector((state) => state.category)
 	const [selected, setSelected] = useState(null)
 	const [newCategory, setNewCategory] = useState('')
 	const { labelIn } = useDictionary()
 	const dispatch = useDispatch()
 	const { buttonLoading } = useSelector((state) => state.loading)
 
-	const getSubCategories = async (props) => {
-		try {
-			const response = await axiosInstance.get(
-				`/api/category/parent/${selected.item._id}`,
-			)
-			dispatch(setCategories(response.data))
-			return true
-		} catch (e) {
-			dispatch(
-				setCallSnackbar({
-					severity: 'error',
-					message: e.response.data.error || e.response.statusText,
-				}),
-			)
-			console.log(e)
-		}
-	}
-
 	useEffect(() => {
-		const getParentCategories = async () => {
-			const response = await axiosInstance.get('/api/parent-categories')
-			dispatch(setParentCategories(response.data))
-		}
-		getParentCategories()
+		getParentCategories(dispatch)
 	}, [])
 
 	useEffect(() => {
 		if (selected) {
-			getSubCategories()
+			getSubCategories(dispatch, selected)
 		}
 	}, [selected])
 
-	const handleAddCategory = (e) => {
-		const addCategory = async () => {
-			try {
-				const response = await axiosInstance.post('/api/category', {
-					title: newCategory,
-					parentCategoryId: selected.item._id,
-				})
-				if (response.status === 200) {
-					dispatch(setButtonLoading(false))
-					getSubCategories()
-					dispatch(
-						setCallSnackbar({
-							severity: 'success',
-							message: `Category: ${newCategory} created with success!`,
-						}),
-					)
-				}
-			} catch (e) {
-				console.log(e)
-				dispatch(setButtonLoading(false))
-				dispatch(
-					setCallSnackbar({
-						severity: 'error',
-						message: 'You must select a Category first!',
-					}),
-				)
-			}
+	const handleAddCategory = () => {
+		const handleResponse = () => {
+			dispatch(setButtonLoading(false))
+			getSubCategories(dispatch, selected)
+			dispatch(
+				setCallSnackbar({
+					severity: 'success',
+					message: `Category: ${newCategory} created with success!`,
+				}),
+			)
 		}
-		dispatch(setButtonLoading(true))
-		setTimeout(() => {
-			addCategory()
-		}, 2000)
+
+		makeRequest({
+			dispatch,
+			handleResponse,
+			loadingAction: setButtonLoading,
+			method: 'post',
+			url: `/api/category`,
+			data: {
+				title: newCategory,
+				parentCategoryId: selected.item._id,
+			},
+		})
 	}
 
 	return (
@@ -231,30 +65,26 @@ const Category = () => {
 			<Paper sx={{ padding: 5, margin: 5 }}>
 				<Typography variant='h5'>{labelIn('general_categories')}</Typography>
 				<Grid container spacing={2}>
-					<Grid item xs={3}>
-						{parentCategories.map((item, index) => {
-							return (
-								<DisplayParentCategories
-									key={`${item.title}-${index}`}
-									item={item}
-									index={index}
-									selected={selected}
-									setSelected={setSelected}
-								/>
-							)
-						})}
+					<Grid
+						item
+						xs={3}
+						style={{ padding: 0 }}
+						sx={{ ...overflowStyle, height: '64vh', marginTop: 3, marginLeft: 2 }}>
+						<DisplayParentCategories
+							parentCategories={parentCategories}
+							selected={selected}
+							setSelected={setSelected}
+						/>
 					</Grid>
-					<Grid item xs={3}>
+					<Grid item xs={3} style={{ padding: 0 }}>
 						<Typography variant='h6'>{labelIn('categories')}</Typography>
-						{categories.map((item, index) => {
-							return (
-								<DisplaySubCategories
-									key={`${item.title}-${index}`}
-									item={item}
-									getSubCategories={getSubCategories}
-								/>
-							)
-						})}
+						<Grid
+							sx={{ ...overflowStyle, height: '64vh', marginTop: 0, marginLeft: 2 }}>
+							<DisplaySubCategories
+								categories={categories}
+								getSubCategories={() => getSubCategories(dispatch, selected)}
+							/>
+						</Grid>
 					</Grid>
 					<Grid item xs={4} sx={{ paddingLeft: 5, marginLeft: 5 }}>
 						<Typography variant='h6'>
@@ -276,14 +106,9 @@ const Category = () => {
 								onClick={handleAddCategory}
 								size='small'
 								sx={{ mt: 2 }}
-								loadingIndicator={
-									<CircularProgress
-										sx={{
-											color: 'white',
-										}}
-										size={24}
-									/>
-								}>
+								loadingPosition='start'
+								startIcon={<AddIcon />}>
+
 								{labelIn('category_button_add')}
 							</LoadingButton>
 						</Grid>

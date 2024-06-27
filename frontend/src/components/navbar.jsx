@@ -6,7 +6,7 @@ import MuiAppBar from '@mui/material/AppBar'
 import IconButton from '@mui/material/IconButton'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import * as React from 'react'
+import { React } from 'react'
 import useDictionary from '../hooks/useDictionary'
 import { useTheme } from '@emotion/react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -32,14 +32,14 @@ const AppBar = styled(MuiAppBar, {
 }))
 
 const Navbar = (props) => {
-	const { handleDrawerOpen, open, setIsDarkMode } = props
+	const { handleDrawerOpen, open, setIsLightMode, isLightMode } = props
 	const { labelIn } = useDictionary()
 	const theme = useTheme()
 	const dispatch = useDispatch()
 	const { isLogin } = useSelector((state) => state.auth)
 
 	const handleThemeMode = (e) => {
-		setIsDarkMode((prev) => !prev)
+		setIsLightMode((prev) => !prev)
 	}
 
 	const login = () => {
@@ -81,6 +81,7 @@ const Navbar = (props) => {
 					</Grid>
 					<Grid item>
 						<Switch
+							checked={isLightMode}
 							color={'inherit'}
 							onClick={handleThemeMode}
 							icon={<LightModeIcon />}
@@ -94,12 +95,12 @@ const Navbar = (props) => {
 						/>
 						{/*notifications*/}
 						{isLogin ? (
-							<Button color={'inherit'} variant='text' onClick={logout}>
-							{labelIn('logout_button')}
+							<Button color={'inherit'} variant='text' onClick={logout} size='small'>
+								{labelIn('logout_button')}
 							</Button>
 						) : (
-							<Button color={'inherit'} variant='outlined' onClick={login}>
-							{labelIn('login_button')}
+							<Button color={'inherit'} variant='text' onClick={login} size='small'>
+								{labelIn('login_button')}
 							</Button>
 						)}
 					</Grid>

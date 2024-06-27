@@ -117,7 +117,6 @@ const permCategories = [
 	{ title: 'Bills & Utilities' },
 	{ title: 'Business Services' },
 	{ title: 'Education' },
-	{ title: 'Education' },
 	{ title: 'Entertainment' },
 	{ title: 'Fees & Charges' },
 	{ title: 'Financial' },
@@ -129,6 +128,12 @@ const permCategories = [
 	{ title: 'Kids' },
 	{ title: 'Loans' },
 	{ title: 'Misc Expenses' },
+	{ title: 'Personal care' },
+	{ title: 'Pets' },
+	{ title: 'Shopping' },
+	{ title: 'Travel' },
+	{ title: 'Uncategorized' },
+
 ]
 
 const createParentCategories = () => {
