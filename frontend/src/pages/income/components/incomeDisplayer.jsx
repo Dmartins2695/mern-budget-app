@@ -12,6 +12,8 @@ export const IncomeDisplayer = (props) => {
 	const { incomes, selected, setSelected } = props
 	const theme = useTheme()
 
+	//on selectedIndex change grab info of income and show graphs about budgets and it it hitted the target or not
+
 	return incomes.map((item, index) => {
 		return (
 			<div style={{ marginBottom: 10 }} key={`${item.title}-${index}`}>
@@ -40,18 +42,6 @@ export const IncomeDisplayer = (props) => {
 								</Typography>
 							</Grid>
 						</AccordionSummary>
-						<AccordionDetails>
-							{/* budgets basic info maybe make loop for data*/}
-							{/* Missing create api to grab incomes with basic info of budgets */}
-							<Grid container alignItems='center' justifyContent='space-between'>
-								<Typography variant='body1' display='inline'>
-									{/* replace with data variable */} Missing
-								</Typography>
-								<Typography variant='body2' display='inline'>
-									{/* replace with data variable */} data
-								</Typography>
-							</Grid>
-						</AccordionDetails>
 					</Accordion>
 				)}
 			</div>
