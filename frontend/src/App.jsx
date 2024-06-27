@@ -8,7 +8,6 @@ import {
 	BrowserRouter as Router,
 	Routes,
 } from 'react-router-dom'
-import Layout from './components/layout'
 import { setAuthToken } from './config/axiosInstance'
 import { darkTheme, lightTheme } from './config/theme/theme'
 import { initializeKeycloak } from './feature/auth/authSlice'
@@ -18,6 +17,7 @@ import Dashboard from './pages/dashboard'
 import ErrorPage from './pages/errorPage'
 import Income from './pages/income'
 import Transactions from './pages/transactions'
+import Layout from './pages/layout'
 
 const Authenticated = (props) => {
 	return (

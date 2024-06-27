@@ -3,9 +3,9 @@ import * as React from 'react'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Outlet, useNavigate } from 'react-router-dom'
-import Navbar from './navbar'
-import SideMenu from './sideMenu'
-import { clearReducers } from '../utils/stateControlFunctions'
+import { clearReducers } from '../../utils/stateControlFunctions'
+import SideMenu from './components/sideMenu'
+import Navbar from './components/navbar'
 
 const Layout = (props) => {
 	const [open, setOpen] = useState(false)

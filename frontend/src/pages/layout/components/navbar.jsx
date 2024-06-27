@@ -7,10 +7,10 @@ import IconButton from '@mui/material/IconButton'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { React } from 'react'
-import useDictionary from '../hooks/useDictionary'
 import { useTheme } from '@emotion/react'
 import { useDispatch, useSelector } from 'react-redux'
-import { performLogin, performLogout } from '../feature/auth/authSlice'
+import useDictionary from '../../../hooks/useDictionary'
+import { performLogin, performLogout } from '../../../feature/auth/authSlice'
 
 const drawerWidth = 240
 

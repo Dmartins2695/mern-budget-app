@@ -1,5 +1,5 @@
 import { useTheme } from '@emotion/react'
-import useDictionary from '../hooks/useDictionary'
+import useDictionary from '../../../hooks/useDictionary'
 import {
 	Drawer,
 	IconButton,
@@ -10,9 +10,9 @@ import {
 	ListItemText,
 	styled,
 } from '@mui/material'
-import SnackbarComp from './snackbarComp'
+import SnackbarComp from '../../../components/snackbarComp'
 import { Outlet } from 'react-router-dom'
-import logo from '../resources/Logo2.png'
+import logo from '../../../resources/Logo2.png'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
