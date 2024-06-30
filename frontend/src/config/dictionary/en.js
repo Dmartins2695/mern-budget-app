@@ -34,4 +34,11 @@ export const en = {
 	open_add_transaction: 'Add Transaction',
 	close_add_transaction: 'Cancel',
 	select_income_title: 'Selected Income',
+	form_button_new_budget: 'Add Budget',
+	form_budget_end_date: 'End Date',
+	form_budget_time_to_renew: 'Renew Time',
+	form_budget_recurring_time: 'Recurring Time',
+	form_budget_amount: 'Budget Amount',
+	form_budget_title: 'Budget Title',
+	new_budget: 'Create Budget',
 }
