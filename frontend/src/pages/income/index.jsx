@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIncomes } from '../../feature/data/incomeSlice'
 import useDictionary from '../../hooks/useDictionary'
-import { makeRequest } from '../../utils/resquestTemplate'
+import { makeRequest } from '../../utils/requestTemplate'
 import { IncomeDisplayer } from './components/incomeDisplayer'
 import { NewIncome } from './components/newIncome'
 
@@ -74,6 +74,7 @@ const Income = () => {
 							getIncomes={getIncomes}
 							open={open}
 							handleModal={handleAddIncome}
+							setOpen={setOpen}
 						/>
 						{/* Render Income data */}
 						<IncomeDisplayer

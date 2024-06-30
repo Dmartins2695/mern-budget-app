@@ -15,7 +15,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setModalButtonLoading } from '../../../feature/loading/loadingSlice'
 import useDictionary from '../../../hooks/useDictionary'
-import { makeRequest } from '../../../utils/resquestTemplate'
+import { makeRequest } from '../../../utils/requestTemplate'
 
 export const DisplaySubCategories = (props) => {
 	const { item, getSubCategories, categories } = props

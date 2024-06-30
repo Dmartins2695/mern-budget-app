@@ -2,7 +2,7 @@ import {
 	setCategories,
 	setParentCategories,
 } from '../../feature/data/categorySlice'
-import { makeRequest } from '../../utils/resquestTemplate'
+import { makeRequest } from '../../utils/requestTemplate'
 
 export const getSubCategories = (dispatch, selected) => {
 	const handleResponse = (response) => {

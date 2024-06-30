@@ -43,7 +43,6 @@ const Layout = (props) => {
 					handleListItemClick={handleListItemClick}
 					handleDrawerClose={handleDrawerClose}
 				/>
-
 			) : (
 				<div style={{ paddingTop: 80, paddingLeft: 15 }}>
 					<Outlet />

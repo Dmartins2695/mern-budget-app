@@ -33,5 +33,5 @@ export const en = {
 	created_new_transaction: 'New transaction was created successfully!',
 	open_add_transaction: 'Add Transaction',
 	close_add_transaction: 'Cancel',
-
+	select_income_title: 'Selected Income',
 }

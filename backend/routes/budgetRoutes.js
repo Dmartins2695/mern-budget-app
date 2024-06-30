@@ -5,6 +5,7 @@ const {
 	getBudgetById,
 	deleteBudget,
 	updateBudget,
+	getBudgetsByIncomeId,
 } = require('../controllers/budgetController')
 
 const router = express.Router()
@@ -14,6 +15,9 @@ router.get('/', getAllBudgets)
 
 //Get Budget By Id
 router.get('/:id', getBudgetById)
+
+//Get Budget By Id
+router.get('/income/:id', getBudgetsByIncomeId)
 
 //Create Budget
 router.post('/', createNewBudget)

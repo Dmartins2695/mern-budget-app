@@ -10,6 +10,7 @@ export const makeRequest = (props) => {
 		data,
 		handleResponse,
 		loadingAction,
+		handleError,
 		timer = 1000,
 	} = props
 	loadingAction && dispatch(loadingAction(true))
@@ -24,7 +25,6 @@ export const makeRequest = (props) => {
 		// time out is here so its possible to see the loading feature working can be removed!
 		axiosInstance(config)
 			.then((response) => {
-				console.log('here')
 				handleResponse(response)
 				loadingAction && dispatch(loadingAction(false))
 			})
@@ -37,6 +37,7 @@ export const makeRequest = (props) => {
 							e?.response?.data?.error || e.response?.statusText || 'Unknown Error!',
 					}),
 				)
+				handleError && handleError()
 			})
 			.finally(() => {
 				loadingAction && dispatch(loadingAction(false))

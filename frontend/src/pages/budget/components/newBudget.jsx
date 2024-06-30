@@ -1,5 +1,3 @@
-import CloseIcon from '@mui/icons-material/Close'
-import LoadingButton from '@mui/lab/LoadingButton'
 import {
 	Autocomplete,
 	Dialog,
@@ -8,28 +6,26 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setCallSnackbar } from '../../../feature/snackbar/snackbarSlice'
 import useDictionary from '../../../hooks/useDictionary'
 import { transformDataFOrDroplist } from '../../../utils/dataTransformation'
-import { makeRequest } from '../../../utils/requestTemplate'
-import { handleStateChange } from '../../../utils/stateControlFunctions'
+import CloseIcon from '@mui/icons-material/Close'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
 import { getParentCategories, getSubCategories } from '../../category/functions'
-import { getTransactions } from '../functions'
+import { handleStateChange } from '../../../utils/stateControlFunctions'
 
-const NewTransaction = (props) => {
+const NewBudget = (props) => {
 	const { selectedIncome, setOpenAdd, openAdd, handleOpen } = props
-	const { labelIn } = useDictionary()
-	const dispatch = useDispatch()
 	const { categories, parentCategories } = useSelector((state) => state.category)
-	const { buttonLoading } = useSelector((state) => state.loading)
+	const { labelIn } = useDictionary()
 	const [parentId, setParentId] = useState('')
-	const [newTransaction, setNewTransaction] = useState({
-		incomeId: selectedIncome?._id,
+	const dispatch = useDispatch()
+	const [newBudget, setNewBudget] = useState({
+		incomeId: selectedIncome,
 		categoryId: '',
 		amount: undefined,
-		description: '',
+		timeToRenew: '',
+		recurringTime: '',
 		title: '',
 	})
 
@@ -46,32 +42,11 @@ const NewTransaction = (props) => {
 	}, [parentId])
 
 	const handleChange = (event, newValue) => {
-		setNewTransaction((prev) => ({ ...prev, categoryId: newValue._id }))
+		setNewBudget((prev) => ({ ...prev, categoryId: newValue._id }))
 	}
 
 	const handleChangeParent = (event, newValue) => {
-		setParentId(newValue._id)
-	}
-
-	const addTransaction = () => {
-		const handleResponse = (response) => {
-			getTransactions(dispatch, selectedIncome)
-			dispatch(
-				setCallSnackbar({
-					severity: 'success',
-					message: `${labelIn('created_new_transaction')}`,
-				}),
-			)
-			setOpenAdd(false)
-		}
-
-		makeRequest({
-			dispatch,
-			handleResponse,
-			method: 'post',
-			url: '/api/transactions',
-			data: newTransaction,
-		})
+		setParentId(newValue?._id)
 	}
 
 	return (
@@ -85,13 +60,14 @@ const NewTransaction = (props) => {
 				},
 			}}
 			maxWidth='lg'>
+			{/*title amount recurringTime renewTime category*/}
 			<Grid
 				container
 				alignItems={'center'}
 				justifyContent={'space-between'}
 				sx={{ mb: 2 }}>
 				<Typography variant='h6' sx={{ mb: 2 }}>
-					{labelIn('new_transaction')}
+					{labelIn('new_budget')}
 				</Typography>
 				<IconButton onClick={handleOpen}>
 					<CloseIcon />
@@ -100,20 +76,10 @@ const NewTransaction = (props) => {
 			<Grid
 				container
 				alignItems={'center'}
-				columnSpacing={4}
-				spacing={2}
+				columnSpacing={2}
 				sx={{ paddingLeft: 2 }}>
-				<Grid item xs={3}>
-					<TextField
-						label={labelIn('select_income_title')}
-						value={selectedIncome?.title}
-						disabled
-						variant='standard'
-					/>
-				</Grid>
-				<Grid item xs={3}>
+				<Grid item xs={4}>
 					<Autocomplete
-						id='combo-box-demo'
 						options={transformDataFOrDroplist(parentCategories)}
 						onChange={handleChangeParent}
 						isOptionEqualToValue={(option, value) => option._id === value._id}
@@ -127,9 +93,8 @@ const NewTransaction = (props) => {
 						}}
 					/>
 				</Grid>
-				<Grid item xs={3}>
+				<Grid item xs={4}>
 					<Autocomplete
-						id='combo-box-demo'
 						options={transformDataFOrDroplist(categories)}
 						onChange={handleChange}
 						isOptionEqualToValue={(option, value) => option._id === value._id}
@@ -143,58 +108,35 @@ const NewTransaction = (props) => {
 						}}
 					/>
 				</Grid>
-				<Grid item xs={3} />
+				<Grid item xs={4} />
 				<Grid item xs={2}>
 					<TextField
 						id='title'
 						variant='standard'
-						value={newTransaction.title}
-						label={labelIn('form_transaction_title')}
-						onChange={(e) => handleStateChange(e, setNewTransaction)}
+						value={newBudget.title}
+						label={labelIn('form_budget_title')}
+						onChange={(e) => handleStateChange(e, setNewBudget)}
 					/>
 				</Grid>
 				<Grid item xs={10}>
 					<TextField
-						id='description'
-						variant='standard'
-						value={newTransaction.description}
-						label={labelIn('form_transaction_description')}
-						onChange={(e) => handleStateChange(e, setNewTransaction)}
-						fullWidth
-					/>
-				</Grid>
-				<Grid item xs={3}>
-					<TextField
 						id='amount'
 						variant='standard'
-						value={newTransaction.amount}
+						value={newBudget.amount}
 						label={labelIn('form_transaction_amount')}
 						onChange={(e) => {
 							const value = e.target.value
 							if (/^\d*$/.test(value)) {
 								// Allow only digits
-								handleStateChange(e, setNewTransaction)
+								handleStateChange(e, setNewBudget)
 							}
 						}}
 						inputProps={{ inputMode: 'numeric' }}
 					/>
-				</Grid>
-				<Grid item xs={6} />
-				<Grid item xs={3}>
-					<LoadingButton
-						loading={buttonLoading}
-						variant='contained'
-						onClick={addTransaction}
-						loadingPosition='start'
-						startIcon={<div />}
-						size='small'
-						sx={{ mt: 3, ml: 2 }}>
-						{labelIn('form_button_new_transaction')}
-					</LoadingButton>
 				</Grid>
 			</Grid>
 		</Dialog>
 	)
 }
 
-export default NewTransaction
+export default NewBudget

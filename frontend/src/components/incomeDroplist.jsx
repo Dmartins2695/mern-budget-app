@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import useDictionary from '../hooks/useDictionary'
 import { useEffect } from 'react'
 import { setIncomes } from '../feature/data/incomeSlice'
-import { makeRequest } from '../utils/resquestTemplate'
+import { makeRequest } from '../utils/requestTemplate'
 import { Autocomplete, TextField } from '@mui/material'
 import { transformDataFOrDroplist } from '../utils/dataTransformation'
 

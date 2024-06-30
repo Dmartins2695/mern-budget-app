@@ -8,10 +8,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setButtonLoading } from '../../../feature/loading/loadingSlice'
 import { setCallSnackbar } from '../../../feature/snackbar/snackbarSlice'
 import useDictionary from '../../../hooks/useDictionary'
-import { makeRequest } from '../../../utils/resquestTemplate'
+import { makeRequest } from '../../../utils/requestTemplate'
 import { handleStateChange } from '../../../utils/stateControlFunctions'
 export const NewIncome = (props) => {
-	const { getIncomes, handleModal, open } = props
+	const { getIncomes, handleModal, open, setOpen } = props
 	const theme = useTheme()
 	const { labelIn } = useDictionary()
 	const dispatch = useDispatch()
@@ -30,6 +30,7 @@ export const NewIncome = (props) => {
 					message: labelIn('created_new_income'),
 				}),
 			)
+			setOpen(false)
 		}
 
 		makeRequest({

@@ -96,11 +96,7 @@ const updateTemplate = async (req, res, schema, title) => {
 	const updateFields = filterRequestBodyFields(allowedFields, req.body)
 
 	try {
-		const income = await schema.findOneAndUpdate(
-			{ _id: id, userId: userId },
-			{ $set: updateFields },
-			{ new: true, runValidators: true },
-		)
+		const income = await schema.findOneAndUpdate({ _id: id, userId: req.user.id }, { $set: updateFields }, { new: true, runValidators: true },)
 
 		if (!income) {
 			return res.status(404).json({ error: `${title} not Found!` })
@@ -154,5 +150,5 @@ module.exports = {
 	deleteTemplate,
 	getByIdTemplate,
 	getAllTemplate,
-	createParentCategories,
+	createParentCategories
 }
