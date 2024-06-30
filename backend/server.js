@@ -33,8 +33,9 @@ app.use((req, res, next) => {
 })
 setupRoutes(app, keycloak)
 
-app.get('/', (req, res) => {
-	res.send('Hello, World!')
+app.use((err, req, res) => {
+	console.error(err.stack)
+	res.status(500).json({ error: err.message })
 })
 
 // Serve static files from the React app

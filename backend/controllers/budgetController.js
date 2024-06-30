@@ -73,7 +73,11 @@ const getBudgetsByIncomeId = async (req, res) => {
 			list: Object.values(parentCategory.list),
 		}))
 
-		return finalResult ? res.status(200).json(finalResult) : res.status(400).json({ error: `No Budgets associated to incomeId: ${id}!` })
+		return finalResult
+			? res.status(200).json(finalResult)
+			: res
+					.status(400)
+					.json({ error: `No Budgets associated to incomeId: ${id}!` })
 	} catch (e) {
 		return res.status(400).json(e)
 	}
@@ -95,6 +99,12 @@ const updateBudget = async (req, res) => {
 	updateTemplate(req, res, Budget, 'Budget')
 }
 
+//Get Recurring times for Budgets
+const getBudgetsRecurringTimes = (req, res) => {
+	const recurringTimes = ['one time', 'week', 'month', 'annual']
+	res.json(recurringTimes)
+}
+
 module.exports = {
 	createNewBudget,
 	getAllBudgets,
@@ -102,4 +112,5 @@ module.exports = {
 	deleteBudget,
 	updateBudget,
 	getBudgetsByIncomeId,
+	getBudgetsRecurringTimes,
 }

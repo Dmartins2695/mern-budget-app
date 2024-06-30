@@ -5,6 +5,7 @@ import incomesReducer from '../feature/data/incomeSlice'
 import loadingReducer from '../feature/loading/loadingSlice'
 import snackbarReducer from '../feature/snackbar/snackbarSlice'
 import transactionsReducer from '../feature/data/transactionsSlice'
+import budgetReducer from '../feature/data/budgetSlice'
 
 
 const store = configureStore({
@@ -15,6 +16,7 @@ const store = configureStore({
 		incomes: incomesReducer,
 		category: categoryReducer,
 		transactions: transactionsReducer,
+		budget: budgetReducer,
 	},
 })
 

@@ -22,7 +22,12 @@ const BudgetSchema = new Schema(
 			required: true,
 		},
 		timeToRenew: {
-			type: Number,
+			type: Date,
+			required: true,
+		},
+		endDate: {
+			type: Date,
+			required: true,
 		},
 		incomeId: {
 			type: mongoose.Schema.Types.ObjectId,

@@ -13,12 +13,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { getParentCategories, getSubCategories } from '../../category/functions'
 import { handleStateChange } from '../../../utils/stateControlFunctions'
+import { makeRequest } from '../../../utils/requestTemplate'
 
 const NewBudget = (props) => {
 	const { selectedIncome, setOpenAdd, openAdd, handleOpen } = props
 	const { categories, parentCategories } = useSelector((state) => state.category)
 	const { labelIn } = useDictionary()
 	const [parentId, setParentId] = useState('')
+	const [recurringTimes, setRecurringTimes] = useState([])
 	const dispatch = useDispatch()
 	const [newBudget, setNewBudget] = useState({
 		incomeId: selectedIncome,
@@ -33,6 +35,17 @@ const NewBudget = (props) => {
 		if (parentCategories.length === 0) {
 			getParentCategories(dispatch)
 		}
+		const handleResponse = (response) => {
+			console.log(response)
+			setRecurringTimes(response.data)
+		}
+
+		makeRequest({
+			dispatch,
+			handleResponse,
+			method: 'get',
+			url: '/api/budget/recurring-times',
+		})
 	}, [])
 
 	useEffect(() => {
@@ -60,7 +73,6 @@ const NewBudget = (props) => {
 				},
 			}}
 			maxWidth='lg'>
-			{/*title amount recurringTime renewTime category*/}
 			<Grid
 				container
 				alignItems={'center'}
@@ -134,6 +146,7 @@ const NewBudget = (props) => {
 						inputProps={{ inputMode: 'numeric' }}
 					/>
 				</Grid>
+				{/*title amount recurringTime renewTime category*/}
 			</Grid>
 		</Dialog>
 	)

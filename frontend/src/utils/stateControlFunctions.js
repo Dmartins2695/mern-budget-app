@@ -1,3 +1,4 @@
+import { setInitialStateBudget } from '../feature/data/budgetSlice'
 import { setInitialStateCategories } from '../feature/data/categorySlice'
 import { setInitialStateIncomes } from '../feature/data/incomeSlice'
 import { setInitialStateTransaction } from '../feature/data/transactionsSlice'
@@ -8,6 +9,7 @@ export const clearReducers = (dispatch) => {
 	dispatch(setInitialStateIncomes())
 	dispatch(setInitialStateLoading())
 	dispatch(setInitialStateTransaction())
+	dispatch(setInitialStateBudget())
 }
 
 export const handleStateChange = (e, func) => {
